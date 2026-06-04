@@ -38,8 +38,12 @@ async function inicializarPagina() {
 
     carregarCabecalho();
     carregarJogos();
-    await carregarExtras();
-    verificarTravaExtras();
+    
+    // A função carregarExtras foi modificada para retornar uma Promessa
+    await carregarExtras(); 
+    
+    // AQUI ESTAVA O PROBLEMA: A função foi chamada logo após carregar os extras!
+    verificarTravaExtras(); 
 }
 
 async function carregarCabecalho() {
@@ -64,15 +68,12 @@ function formatarHora(dataISO) {
 
 // --- REDE DE SEGURANÇA DAS BANDEIRAS ---
 function obterCaminhoBandeira(nomeTime, caminhoBanco) {
-    // 1. Se não tem time ainda, retorna a bandeira genérica
     if (!nomeTime || nomeTime === "A definir") {
         return "./img/country/default.png"; 
     }
-    // 2. Se o banco de dados tem o caminho gravado, usa ele
     if (caminhoBanco) {
         return caminhoBanco;
     }
-    // 3. O PLANO B: Monta o caminho pelo nome da seleção (ex: ./img/country/Brasil.png)
     return `./img/country/${nomeTime}.png`;
 }
 
@@ -88,13 +89,11 @@ async function carregarJogos() {
         palpitesUsuario.forEach(p => mapaPalpites[p.jogo_id] = p);
     }
 
-    // CORREÇÃO DO FUSO HORÁRIO: Cria a data local antes de checar o dia
     todosJogos = jogos.map(jogo => {
         const dataLocal = new Date(jogo.data_jogo);
-        const dia = dataLocal.getDate(); // Pega o dia exato no horário de Brasília
+        const dia = dataLocal.getDate(); 
         
         let rodada = 1;
-        // Fase de Grupos sempre em Junho, podemos isolar pelos dias
         if (dia >= 18 && dia <= 23) rodada = 2;
         if (dia >= 24) rodada = 3;
         
@@ -115,14 +114,13 @@ function renderizarRodada() {
 
     const jogosDaRodada = todosJogos.filter(j => j.rodada === rodadaAtual && (j.fase === 'GROUP_STAGE' || j.fase === 'Fase de Grupos'));
     let dataAtualGrupo = '';
-    const agora = new Date(); // Pega o horário atual para a trava de segurança
+    const agora = new Date(); 
 
     jogosDaRodada.forEach(jogo => {
         const dataFormatada = formatarDataHeader(jogo.data_jogo);
         const horaFormatada = formatarHora(jogo.data_jogo);
         const palpite = mapaPalpites[jogo.id]; 
         
-        // Verifica se o jogo já começou ou se já encerrou
         const dataHoraJogo = new Date(jogo.data_jogo);
         const jogoBloqueado = agora >= dataHoraJogo; 
         const jogoEncerrado = jogo.status === 'encerrado';
@@ -138,11 +136,9 @@ function renderizarRodada() {
         const valA = palpite ? palpite.palpite_gols_a : '';
         const valB = palpite ? palpite.palpite_gols_b : '';
 
-        // Prepara os atributos de bloqueio
         const inputStatus = jogoBloqueado ? 'disabled' : '';
         const cardClasse = jogoEncerrado ? 'jogo-card encerrado' : 'jogo-card';
 
-        // Etiqueta de placar oficial (só aparece se o status for encerrado)
         let htmlPlacarOficial = '';
         if (jogoEncerrado) {
             const pts = palpite ? palpite.pontos_obtidos : 0;
@@ -181,7 +177,6 @@ function renderizarRodada() {
         divLista.appendChild(card);
     });
 
-    // Adiciona o Botão Mestre no final, mas apenas se houver jogos abertos na rodada
     const temJogoAberto = jogosDaRodada.some(j => new Date(j.data_jogo) > agora);
     if (temJogoAberto) {
         const btnSalvarTudo = document.createElement('button');
@@ -206,21 +201,18 @@ window.salvarRodadaEmLote = async function() {
     const jogosDaRodada = todosJogos.filter(j => j.rodada === rodadaAtual && (j.fase === 'GROUP_STAGE' || j.fase === 'Fase de Grupos'));
     const palpitesParaSalvar = [];
     
-    // Nova variável para contar quantos jogos o usuário AINDA PODE palpitar
     let jogosDisponiveis = 0; 
     const agora = new Date();
 
     jogosDaRodada.forEach(jogo => {
         const dataHoraJogo = new Date(jogo.data_jogo);
         
-        // Só contabilizamos os jogos que ainda não foram bloqueados
         if (agora < dataHoraJogo) {
             jogosDisponiveis++;
             
             const golsA = document.getElementById(`gols_a_${jogo.id}`).value;
             const golsB = document.getElementById(`gols_b_${jogo.id}`).value;
 
-            // Se o usuário digitou os dois lados, preparamos para salvar
             if (golsA !== '' && golsB !== '') {
                 palpitesParaSalvar.push({
                     usuario_id: usuarioLogadoId,
@@ -236,16 +228,13 @@ window.salvarRodadaEmLote = async function() {
         return alert("Preencha o placar de pelo menos um jogo antes de salvar!");
     }
 
-    // --- A MÁGICA DO ALERTA AQUI ---
     if (palpitesParaSalvar.length < jogosDisponiveis) {
         const faltam = jogosDisponiveis - palpitesParaSalvar.length;
         const confirmar = confirm(`Atenção: Você deixou ${faltam} jogo(s) em branco nesta rodada.\n\nTem certeza que deseja salvar e deixar esses jogos sem palpite?`);
         
-        // Se ele clicar em "Cancelar" no alerta, paramos a função aqui mesmo
         if (!confirmar) return; 
     }
 
-    // O Supabase salva os dados
     const { error } = await supabaseClient
         .from('palpites')
         .upsert(palpitesParaSalvar, { onConflict: 'usuario_id, jogo_id' });
@@ -273,13 +262,12 @@ const nomesFasesMataMata = {
     'FINAL': 'Final'
 };
 
-// Ordem de navegação das telas
 const ordemFasesMata = [
     { id: 'LAST_32', label: '16 avos de final' },
     { id: 'LAST_16', label: 'Oitavas de final' },
     { id: 'QUARTER_FINALS', label: 'Quartas de final' },
     { id: 'SEMI_FINALS', label: 'Semifinais' },
-    { id: 'FINAIS', label: 'Finais' } // Agrupa 3º e Final
+    { id: 'FINAIS', label: 'Finais' } 
 ];
 let indiceFaseMata = 0;
 
@@ -287,13 +275,11 @@ function renderizarMataMata() {
     const divMata = document.getElementById('lista-jogos-mata');
     divMata.innerHTML = '';
 
-    // Configura a barra de navegação
     const faseSelecionada = ordemFasesMata[indiceFaseMata];
     document.getElementById('label-fase-mata').textContent = faseSelecionada.label;
     document.getElementById('btn-prev-mata').disabled = (indiceFaseMata === 0);
     document.getElementById('btn-next-mata').disabled = (indiceFaseMata === ordemFasesMata.length - 1);
 
-    // Pega apenas os jogos da fase em que o usuário está navegando
     let jogosDaFase = todosJogos.filter(j => {
         if (faseSelecionada.id === 'FINAIS') {
             return j.fase === 'THIRD_PLACE' || j.fase === 'FINAL';
@@ -309,7 +295,6 @@ function renderizarMataMata() {
         const horaFormatada = formatarHora(jogo.data_jogo);
         const palpite = mapaPalpites[jogo.id];
 
-        // Se for a tela de "Finais", cria um título para separar o 3º lugar da Final
         if (faseSelecionada.id === 'FINAIS') {
             const headerFase = document.createElement('h3');
             headerFase.className = 'data-divisor';
@@ -373,13 +358,11 @@ function renderizarMataMata() {
         divMata.appendChild(card);
     });
 
-    // Ajusta o botão de salvar para exibir a fase atual
     const btnSalvarMata = document.getElementById('btn-salvar-mata');
     btnSalvarMata.style.display = temJogoAbertoMata ? 'block' : 'none';
     btnSalvarMata.textContent = `Salvar Palpites - ${faseSelecionada.label}`;
 }
 
-// Escutadores de clique para as setas do Mata-Mata
 document.getElementById('btn-prev-mata').addEventListener('click', () => {
     if (indiceFaseMata > 0) { 
         indiceFaseMata--; 
@@ -396,7 +379,6 @@ document.getElementById('btn-next-mata').addEventListener('click', () => {
     }
 });
 
-// Salva apenas os jogos da tela que está sendo visualizada (Mata-Mata)
 window.salvarMataMataEmLote = async function() {
     const faseSelecionada = ordemFasesMata[indiceFaseMata];
     let jogosDaFase = todosJogos.filter(j => {
@@ -411,7 +393,6 @@ window.salvarMataMataEmLote = async function() {
     jogosDaFase.forEach(jogo => {
         const dataHoraJogo = new Date(jogo.data_jogo);
         
-        // Só conta os jogos que têm times definidos e ainda não começaram
         if (agora < dataHoraJogo && jogo.time_a && jogo.time_b) {
             jogosDisponiveis++;
             
@@ -430,7 +411,6 @@ window.salvarMataMataEmLote = async function() {
 
     if (palpitesParaSalvar.length === 0) return alert("Selecione quem vai avançar em pelo menos um jogo antes de salvar!");
 
-    // --- ALERTA NO MATA-MATA ---
     if (palpitesParaSalvar.length < jogosDisponiveis) {
         const faltam = jogosDisponiveis - palpitesParaSalvar.length;
         const confirmar = confirm(`Atenção: Você não escolheu o vencedor de ${faltam} jogo(s) nesta fase.\n\nTem certeza que deseja salvar assim mesmo?`);
@@ -459,7 +439,7 @@ const btnMata = document.getElementById('btn-tab-mata');
 
 const containerExtras = document.getElementById('container-extras');
 const containerGrupos = document.getElementById('container-grupos');
-const containerMata = document.getElementById('container-mata'); // Nova linha
+const containerMata = document.getElementById('container-mata'); 
 
 function alterarAba(abaAtiva) {
     btnExtras.classList.remove('active');
@@ -468,7 +448,7 @@ function alterarAba(abaAtiva) {
 
     containerExtras.style.display = 'none';
     containerGrupos.style.display = 'none';
-    containerMata.style.display = 'none'; // Nova linha
+    containerMata.style.display = 'none'; 
 
     if (abaAtiva === 'extras') {
         btnExtras.classList.add('active');
@@ -478,12 +458,11 @@ function alterarAba(abaAtiva) {
         containerGrupos.style.display = 'block';
     } else if (abaAtiva === 'mata') {
         btnMata.classList.add('active');
-        containerMata.style.display = 'block'; // Mostra o container
-        renderizarMataMata(); // Chama a nova função mágica
+        containerMata.style.display = 'block'; 
+        renderizarMataMata(); 
     }
 }
 
-// Escutadores de cliques nas abas
 btnExtras.addEventListener('click', () => alterarAba('extras'));
 btnGrupos.addEventListener('click', () => alterarAba('grupos'));
 btnMata.addEventListener('click', () => alterarAba('mata'));
@@ -491,16 +470,13 @@ btnMata.addEventListener('click', () => alterarAba('mata'));
 // ==========================================
 // LÓGICA DE PALPITES EXTRAS
 // ==========================================
-
-// Função para buscar os extras no banco e preencher a tela ao carregar
 async function carregarExtras() {
     const { data: extrasUsuario, error } = await supabaseClient
         .from('palpites_extras')
         .select('*')
         .eq('usuario_id', usuarioLogadoId)
-        .single(); // Usa single() porque a regra é 1 formulário por usuário
+        .single(); 
 
-    // Se achou dados salvos no banco, preenche os selects automaticamente
     if (extrasUsuario) {
         if (extrasUsuario.campeao) document.getElementById('extra-campeao').value = extrasUsuario.campeao;
         if (extrasUsuario.vice) document.getElementById('extra-vice').value = extrasUsuario.vice;
@@ -512,9 +488,20 @@ async function carregarExtras() {
     }
 }
 
-// Função oficial para salvar os extras no banco de dados
 window.salvarExtras = async function() {
+    // 🔒 CADEADO DUPLO: Bloqueia a ação se o prazo já passou
+    const dataLimite = new Date('2026-06-11T15:59:00-03:00'); // Lembre de colocar a data oficial aqui depois dos testes
+    if (new Date() > dataLimite) {
+        return alert("O prazo para os palpites extras já foi encerrado!");
+    }
+
     // Captura o que foi selecionado na tela
+    const campeao = document.getElementById('extra-campeao').value;
+    // ... o resto da função continua igualzinho ...
+
+    // Captura o que foi selecionado na tela
+    const campeao = document.getElementById('extra-campeao').value;
+    // ... o resto da função continua igualzinho ...
     const campeao = document.getElementById('extra-campeao').value;
     const vice = document.getElementById('extra-vice').value;
     const zebra = document.getElementById('extra-zebra').value;
@@ -522,18 +509,11 @@ window.salvarExtras = async function() {
     const artilheiro = document.getElementById('extra-artilheiro').value;
     const assistente = document.getElementById('extra-assistente').value;
     const melhor_jogador = document.getElementById('extra-melhor').value;
-    const dataLimite = new Date('2026-06-04T13:40:00-03:00'); // DATA LIMITE: 11 de Junho de 2026 às 15:59 (Horário de Brasília)!!!
-    if (new Date() > dataLimite) {
-        return alert("O prazo para os palpites extras já foi encerrado!");
-    }
-    const campeao = document.getElementById('extra-campeao').value;
 
-    // Trava de segurança: obriga a preencher pelo menos um antes de clicar em salvar
     if (!campeao && !vice && !zebra && !decepcao && !artilheiro && !assistente && !melhor_jogador) {
         return alert("Preencha ao menos um palpite extra para salvar!");
     }
 
-    // Faz o UPSERT (Cria se não existir, atualiza se já existir)
     const { error } = await supabaseClient
         .from('palpites_extras')
         .upsert({
@@ -545,7 +525,7 @@ window.salvarExtras = async function() {
             artilheiro: artilheiro || null,
             assistente: assistente || null,
             melhor_jogador: melhor_jogador || null
-        }, { onConflict: 'usuario_id' }); // A regra de conflito agora é só o usuário
+        }, { onConflict: 'usuario_id' }); 
 
     if (error) {
         console.error("Erro no Supabase:", error);
@@ -557,12 +537,11 @@ window.salvarExtras = async function() {
 
 // 8.Travar Palpites Extras (Data Limite)
 function verificarTravaExtras() {
-    // Define a data limite: 11 de Junho de 2026 às 15:59 (Horário de Brasília)
-    const dataLimite = new Date('2026-06-04T13:40:00-03:00'); // DATA AQUI!!
+    // Define a data limite
+    const dataLimite = new Date('2026-06-04T13:23:00-03:00');
     const agora = new Date();
 
     if (agora > dataLimite) {
-        // Seleciona todos os campos da aba de extras e trava
         const camposExtras = document.querySelectorAll('.extra-input, .extra-select');
         camposExtras.forEach(campo => {
             campo.disabled = true;
@@ -570,7 +549,6 @@ function verificarTravaExtras() {
             campo.style.cursor = 'not-allowed';
         });
 
-        // Seleciona o botão de salvar os extras e desativa
         const btnSalvarExtras = document.getElementById('btn-salvar-extras'); 
         if (btnSalvarExtras) {
             btnSalvarExtras.disabled = true;
