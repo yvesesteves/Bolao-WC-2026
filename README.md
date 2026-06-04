@@ -73,4 +73,4 @@ WC-2026/
 **5.** Quando o usuário acessa o site, o JavaScript apenas puxa os pontos já mastigados e monta o ranking na tela.
 
 ---
-### ** *Developed by Yves Esteves* ** 
+### *Developed by Yves Esteves* 
