@@ -69,12 +69,24 @@ function obterCaminhoBandeira(nomeTime) {
         return "./img/country/default.png"; 
     }
     
-    // Ignoramos a coluna do banco de dados e FORÇAMOS a formatação baseada no nome!
+    // 1. Dicionário de exceções: "Nome no banco" : "Nome do seu arquivo"
+    const nomesEspeciais = {
+        "Bósnia e Herzegovina": "bosnia",
+        "República Tcheca": "tchequia"
+        // Se mais alguma der erro no futuro, é só adicionar aqui!
+    };
+
+    // 2. Se o time estiver no nosso dicionário, usa o nome simplificado
+    if (nomesEspeciais[nomeTime]) {
+        return `./img/country/${nomesEspeciais[nomeTime]}.png`;
+    }
+
+    // 3. Caso contrário, usa a lógica automática (que funciona para o resto)
     const nomeFormatado = nomeTime
         .toLowerCase()
-        .normalize("NFD") // Separa as letras dos acentos
-        .replace(/[\u0300-\u036f]/g, "") // Remove os acentos
-        .replace(/\s+/g, "-"); // Troca espaços por hífen
+        .normalize("NFD") 
+        .replace(/[\u0300-\u036f]/g, "") 
+        .replace(/\s+/g, "-"); 
         
     return `./img/country/${nomeFormatado}.png`;
 }
