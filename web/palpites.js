@@ -308,8 +308,8 @@ function renderizarMataMata() {
         const imgA = obterCaminhoBandeira(jogo.time_a, jogo.bandeira_a);
         const imgB = obterCaminhoBandeira(jogo.time_b, jogo.bandeira_b);
 
-        const valA = palpite ? palpite.palpite_gols_a : '';
-        const valB = palpite ? palpite.palpite_gols_b : '';
+        const valA = palpite && palpite.palpite_gols_a !== null ? palpite.palpite_gols_a : '';
+        const valB = palpite && palpite.palpite_gols_b !== null ? palpite.palpite_gols_b : '';
 
         const dataHoraJogo = new Date(jogo.data_jogo);
         const jogoBloqueado = (agora >= dataHoraJogo) || !jogo.time_a || !jogo.time_b; 
@@ -332,25 +332,29 @@ function renderizarMataMata() {
 
         const card = document.createElement('div');
         card.className = cardClasse;
+        
+        // NOVO LAYOUT: Agora temos o Radio e o Input de número na mesma linha
         card.innerHTML = `
             <div class="jogo-info-top">
                 <span class="badge-fase">${formatarDataHeader(jogo.data_jogo)}</span>
                 <span class="hora-jogo">${jogoBloqueado && !jogoEncerrado && jogo.time_a ? 'Em andamento' : horaFormatada}</span>
             </div>
             <div class="times-container">
-                <div class="time-row" style="cursor: pointer;" onclick="if(!'${inputStatus}') document.getElementById('radio_a_${jogo.id}').click()">
+                <div class="time-row">
                     <div class="time-detalhe">
+                        <input type="radio" name="vencedor_${jogo.id}" id="radio_a_${jogo.id}" value="${timeA_nome}" class="radio-vencedor" ${inputStatus} ${palpite && palpite.palpite_vencedor === timeA_nome ? 'checked' : ''}>
                         <img src="${imgA}" alt="${timeA_nome}" class="flag-icon-small" onerror="this.src='./img/country/default.png'">
                         <span class="time-nome">${timeA_nome}</span>
                     </div>
-                    <input type="radio" name="vencedor_${jogo.id}" id="radio_a_${jogo.id}" value="${timeA_nome}" class="radio-vencedor" ${inputStatus} ${palpite && palpite.palpite_vencedor === timeA_nome ? 'checked' : ''}>
+                    <input type="number" id="gols_a_${jogo.id}" class="input-placar" min="0" max="15" placeholder="-" value="${valA}" ${inputStatus}>
                 </div>
-                <div class="time-row" style="cursor: pointer;" onclick="if(!'${inputStatus}') document.getElementById('radio_b_${jogo.id}').click()">
+                <div class="time-row">
                     <div class="time-detalhe">
+                        <input type="radio" name="vencedor_${jogo.id}" id="radio_b_${jogo.id}" value="${timeB_nome}" class="radio-vencedor" ${inputStatus} ${palpite && palpite.palpite_vencedor === timeB_nome ? 'checked' : ''}>
                         <img src="${imgB}" alt="${timeB_nome}" class="flag-icon-small" onerror="this.src='./img/country/default.png'">
                         <span class="time-nome">${timeB_nome}</span>
                     </div>
-                    <input type="radio" name="vencedor_${jogo.id}" id="radio_b_${jogo.id}" value="${timeB_nome}" class="radio-vencedor" ${inputStatus} ${palpite && palpite.palpite_vencedor === timeB_nome ? 'checked' : ''}>
+                    <input type="number" id="gols_b_${jogo.id}" class="input-placar" min="0" max="15" placeholder="-" value="${valB}" ${inputStatus}>
                 </div>
             </div>
             ${htmlPlacarOficial}
@@ -362,22 +366,6 @@ function renderizarMataMata() {
     btnSalvarMata.style.display = temJogoAbertoMata ? 'block' : 'none';
     btnSalvarMata.textContent = `Salvar Palpites - ${faseSelecionada.label}`;
 }
-
-document.getElementById('btn-prev-mata').addEventListener('click', () => {
-    if (indiceFaseMata > 0) { 
-        indiceFaseMata--; 
-        renderizarMataMata(); 
-        window.scrollTo(0, 0); 
-    }
-});
-
-document.getElementById('btn-next-mata').addEventListener('click', () => {
-    if (indiceFaseMata < ordemFasesMata.length - 1) { 
-        indiceFaseMata++; 
-        renderizarMataMata(); 
-        window.scrollTo(0, 0); 
-    }
-});
 
 window.salvarMataMataEmLote = async function() {
     const faseSelecionada = ordemFasesMata[indiceFaseMata];
@@ -396,24 +384,29 @@ window.salvarMataMataEmLote = async function() {
         if (agora < dataHoraJogo && jogo.time_a && jogo.time_b) {
             jogosDisponiveis++;
             
+            // Agora capturamos o radio E os placares
             const radioSelecionado = document.querySelector(`input[name="vencedor_${jogo.id}"]:checked`);
-            if (radioSelecionado) {
+            const golsA = document.getElementById(`gols_a_${jogo.id}`).value;
+            const golsB = document.getElementById(`gols_b_${jogo.id}`).value;
+
+            // Só permite salvar se o usuário preencheu o placar E escolheu quem avança
+            if (radioSelecionado && golsA !== '' && golsB !== '') {
                 palpitesParaSalvar.push({
                     usuario_id: usuarioLogadoId,
                     jogo_id: jogo.id,
                     palpite_vencedor: radioSelecionado.value, 
-                    palpite_gols_a: null, 
-                    palpite_gols_b: null
+                    palpite_gols_a: parseInt(golsA), 
+                    palpite_gols_b: parseInt(golsB)
                 });
             }
         }
     });
 
-    if (palpitesParaSalvar.length === 0) return alert("Selecione quem vai avançar em pelo menos um jogo antes de salvar!");
+    if (palpitesParaSalvar.length === 0) return alert("Preencha o placar e selecione quem avança em pelo menos um jogo!");
 
     if (palpitesParaSalvar.length < jogosDisponiveis) {
         const faltam = jogosDisponiveis - palpitesParaSalvar.length;
-        const confirmar = confirm(`Atenção: Você não escolheu o vencedor de ${faltam} jogo(s) nesta fase.\n\nTem certeza que deseja salvar assim mesmo?`);
+        const confirmar = confirm(`Atenção: Faltam ${faltam} jogo(s) incompletos (preencha o placar e marque quem passa).\n\nTem certeza que deseja salvar assim mesmo?`);
         if (!confirmar) return;
     }
 
@@ -426,7 +419,7 @@ window.salvarMataMataEmLote = async function() {
         alert("Erro ao salvar os palpites do mata-mata.");
     } else {
         palpitesParaSalvar.forEach(p => { mapaPalpites[p.jogo_id] = p; });
-        alert(`✅ Sucesso! ${palpitesParaSalvar.length} seleções salvas para: ${faseSelecionada.label}.`);
+        alert(`✅ Sucesso! ${palpitesParaSalvar.length} palpites salvos para: ${faseSelecionada.label}.`);
     }
 }
 
