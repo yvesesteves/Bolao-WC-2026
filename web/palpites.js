@@ -65,14 +65,14 @@ function formatarHora(dataISO) {
 function obterCaminhoBandeira(nomeTime, caminhoBanco) {
     // 1. Se não tem time ainda, retorna a bandeira genérica
     if (!nomeTime || nomeTime === "A definir") {
-        return "../img/country/default.png"; 
+        return "./img/country/default.png"; 
     }
     // 2. Se o banco de dados tem o caminho gravado, usa ele
     if (caminhoBanco) {
         return caminhoBanco;
     }
-    // 3. O PLANO B: Monta o caminho pelo nome da seleção (ex: ../img/country/Brasil.png)
-    return `../img/country/${nomeTime}.png`;
+    // 3. O PLANO B: Monta o caminho pelo nome da seleção (ex: ./img/country/Brasil.png)
+    return `./img/country/${nomeTime}.png`;
 }
 
 // 3. Carrega os Dados
@@ -162,14 +162,14 @@ function renderizarRodada() {
             <div class="times-container">
                 <div class="time-row">
                     <div class="time-detalhe">
-                        <img src="${obterCaminhoBandeira(jogo.time_a, jogo.bandeira_a)}" alt="${jogo.time_a}" class="flag-icon-small" onerror="this.src='../img/country/default.png'">
+                        <img src="${obterCaminhoBandeira(jogo.time_a, jogo.bandeira_a)}" alt="${jogo.time_a}" class="flag-icon-small" onerror="this.src='./img/country/default.png'">
                         <span class="time-nome">${jogo.time_a}</span>
                     </div>
                     <input type="number" id="gols_a_${jogo.id}" class="input-placar" min="0" max="15" placeholder="-" value="${valA}" ${inputStatus}>
                 </div>
                 <div class="time-row">
                     <div class="time-detalhe">
-                        <img src="${obterCaminhoBandeira(jogo.time_b, jogo.bandeira_b)}" alt="${jogo.time_b}" class="flag-icon-small" onerror="this.src='../img/country/default.png'">
+                        <img src="${obterCaminhoBandeira(jogo.time_b, jogo.bandeira_b)}" alt="${jogo.time_b}" class="flag-icon-small" onerror="this.src='./img/country/default.png'">
                         <span class="time-nome">${jogo.time_b}</span>
                     </div>
                     <input type="number" id="gols_b_${jogo.id}" class="input-placar" min="0" max="15" placeholder="-" value="${valB}" ${inputStatus}>
@@ -354,14 +354,14 @@ function renderizarMataMata() {
             <div class="times-container">
                 <div class="time-row" style="cursor: pointer;" onclick="if(!'${inputStatus}') document.getElementById('radio_a_${jogo.id}').click()">
                     <div class="time-detalhe">
-                        <img src="${imgA}" alt="${timeA_nome}" class="flag-icon-small" onerror="this.src='../img/country/default.png'">
+                        <img src="${imgA}" alt="${timeA_nome}" class="flag-icon-small" onerror="this.src='./img/country/default.png'">
                         <span class="time-nome">${timeA_nome}</span>
                     </div>
                     <input type="radio" name="vencedor_${jogo.id}" id="radio_a_${jogo.id}" value="${timeA_nome}" class="radio-vencedor" ${inputStatus} ${palpite && palpite.palpite_vencedor === timeA_nome ? 'checked' : ''}>
                 </div>
                 <div class="time-row" style="cursor: pointer;" onclick="if(!'${inputStatus}') document.getElementById('radio_b_${jogo.id}').click()">
                     <div class="time-detalhe">
-                        <img src="${imgB}" alt="${timeB_nome}" class="flag-icon-small" onerror="this.src='../img/country/default.png'">
+                        <img src="${imgB}" alt="${timeB_nome}" class="flag-icon-small" onerror="this.src='./img/country/default.png'">
                         <span class="time-nome">${timeB_nome}</span>
                     </div>
                     <input type="radio" name="vencedor_${jogo.id}" id="radio_b_${jogo.id}" value="${timeB_nome}" class="radio-vencedor" ${inputStatus} ${palpite && palpite.palpite_vencedor === timeB_nome ? 'checked' : ''}>
