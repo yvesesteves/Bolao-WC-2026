@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Ligas - Bolão 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="../img/taca.png" alt="Logo Taça" class="nav-logo">
+            <span>Bolão 2026</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="ligas.html" class="active">Minhas Ligas</a></li>
+            <li><a href="usuario.html">Área do Usuário</a></li>
+        </ul>
+    </nav>
+
+    <main class="leagues-container">
+        <div class="leagues-header">
+            <h2>Suas Ligas</h2>
+            <p>Gerencie seus bolões, acompanhe seu ranking e desafie seus amigos.</p>
+        </div>
+
+        <div class="leagues-layout">
+            
+            <section class="my-leagues-list">
+                <div id="leagues-grid" class="leagues-grid">
+                    <div class="empty-state">
+                        <h3>Você ainda não participa de nenhum bolão.</h3>
+                        <p>Crie uma liga ou use o código de um amigo para começar!</p>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="leagues-actions">
+                
+                <div class="action-card highlight">
+                    <h3>Entrar com Código</h3>
+                    <p class="settings-desc">Recebeu um convite? Digite o código de 6 caracteres abaixo.</p>
+                    <div class="input-group">
+                        <input type="text" id="join-code" placeholder="Ex: A1B2C3" maxlength="6" class="settings-input uppercase-input">
+                        <button class="btn-save" id="btn-join-league">Entrar</button>
+                    </div>
+                </div>
+
+                <div class="action-card">
+                    <h3>Criar Novo Bolão</h3>
+                    <p class="settings-desc">Seja o administrador e convide a galera.</p>
+                    <div class="input-group">
+                        <input type="text" id="new-league-name" placeholder="Nome da Liga" class="settings-input">
+                        <button class="btn-save dark" id="btn-create-league">Criar</button>
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+        
+    <footer class="footer-creditos">
+        <p>Developed by <a href="https://www.linkedin.com/in/yvesesteves" target="_blank" rel="noopener noreferrer">Yves Esteves</a></p>
+    </footer>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="ligas.js"></script>
+</body>
+</html>

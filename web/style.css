@@ -1,0 +1,1086 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    /* O gradiente agora fica por cima de uma imagem de fundo para dar textura de estádio */
+    background-image: 
+        linear-gradient(to bottom, rgba(7, 11, 25, 0.92), rgba(7, 11, 25, 1)),
+        url('https://www.ewingcole.com/wp-content/uploads/2025/06/MetLife_Giants-Vertical-1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Fundo fixo ao rolar a página */
+    background-color: #070b19;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* --- SEÇÃO HERO (LOGIN E BOAS VINDAS) --- */
+.hero {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Um brilho sutil saindo de cima da tela */
+    box-shadow: inset 0 20px 50px rgba(0, 240, 255, 0.03);
+}
+
+.hero-content {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.hero-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Agrupa a taça e os textos verticalmente */
+.title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+/* Estilo da taça um pouco maior para equilibrar com o novo título */
+.trophy-icon {
+    width: 150px;
+    height: auto;
+    filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4)); 
+}
+
+/* Alinha "BOLÃO COPA" e "2026" em coluna */
+.title-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title-text h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.year-neon {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: #00f0ff;
+    line-height: 0.9;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: #a0aec0;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* --- PAÍSES SEDES --- */
+.hosts {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 25px;
+    font-size: 1.05rem;
+    color: #a0aec0;
+    font-weight: 600;
+}
+
+.host-flag {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Novo estilo da Caixa de Login com Google --- */
+.auth-subtitle {
+    text-align: center;
+    color: #a0aec0;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-google:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.google-logo {
+    width: 22px;
+    height: 22px;
+}
+
+
+/* --- BARRA DE NAVEGAÇÃO (MENU) --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(7, 11, 25, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.nav-logo {
+    width: 28px;
+    height: auto;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #a0aec0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-links a.active {
+    background: rgba(255, 255, 255, 1);
+    color: #070b19;
+}
+
+/* --- COMO FUNCIONA (REGRAS) --- */
+.how-it-works {
+    padding: 80px 20px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.rule-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 30px;
+    border-radius: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rule-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 240, 255, 0.05);
+    border-color: rgba(0, 240, 255, 0.3);
+}
+
+.rule-icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.rule-card h3 {
+    color: #ffffff;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.rule-card p {
+    color: #a0aec0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Lista de Pontos */
+.points-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.points-list li {
+    display: flex;
+    align-items: flex-start; /* Alinha tudo pelo topo, evitando que o texto sambe */
+    gap: 15px; /* Espaço uniforme entre a pontuação e o texto */
+    color: #a0aec0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.points-list strong {
+    color: #ffffff;
+    margin-right: 5px;
+}
+
+.pts-badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    min-width: 65px; /* Trava a largura da caixinha para todas ficarem iguais */
+    text-align: center;
+    flex-shrink: 0; /* Impede a caixinha de encolher se o texto for muito grande */
+}
+
+.pts-text {
+    flex: 1; /* Manda o texto ocupar confortavelmente o resto do espaço */
+}
+
+.pts-badge.exact {
+    background: rgba(16, 163, 127, 0.2);
+    color: #10a37f;
+    border: 1px solid #10a37f;
+}
+
+.pts-badge.outcome {
+    background: rgba(234, 179, 8, 0.2);
+    color: #eab308;
+    border: 1px solid #eab308;
+}
+
+.pts-badge.wrong {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+/* Tags de Bônus */
+.bonus-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.bonus-tags span {
+    background: rgba(0, 240, 255, 0.1);
+    color: #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* --- SEÇÃO DE GRUPOS DA COPA --- */
+.tournament-info {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.section-title p {
+    color: #a0aec0;
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+/* Grade de Grupos */
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+/* Cartão do Grupo */
+.group-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+/* Estilo do botão branco dos times */
+.team {
+    background-color: #ffffff;
+    color: #111827;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 25px; /* Mais arredondado */
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+}
+
+.team:hover {
+    transform: translateX(5px); /* Efeito sutil ao passar o mouse */
+}
+
+/* Estilização da imagem da bandeira (Fase de Grupos) */
+.flag-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+}
+
+/* Ajustes para Telas Pequenas (Celulares) */
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .title-wrapper {
+        flex-direction: column;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .title-text {
+        align-items: center;
+    }
+
+    .trophy-icon {
+        width: 65px;
+    }
+
+    .title-text h1 {
+        font-size: 2rem;
+    }
+    
+    .year-neon {
+        font-size: 3.8rem;
+    }
+
+    .hosts {
+        justify-content: center;
+    }
+
+    .auth-box {
+        margin: 0 auto;
+    }
+}
+
+
+/* --- ÁREA DO USUÁRIO --- */
+.settings-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.settings-header {
+    margin-bottom: 40px;
+}
+
+.settings-header h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.settings-header p {
+    color: #a0aec0;
+    font-size: 1rem;
+}
+
+.settings-card {
+    background: rgba(255, 255, 255, 1);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.settings-card h3 {
+    color: #070b19;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.settings-desc {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+}
+
+.settings-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.settings-input:focus {
+    border-color: #0055ff;
+}
+
+/* PIN de segurança 
+.pin-input {
+    max-width: 120px;
+    text-align: center;
+    letter-spacing: 5px;
+    font-weight: bold;
+}
+*/
+.btn-save {
+    background: #070b19;
+    color: #ffffff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-save:hover {
+    background: #0055ff;
+}
+
+.toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-toggle {
+    background: #070b19;
+    color: #ffffff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.status-badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 15px;
+}
+
+.status-badge.off {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.status-badge.on {
+    background: rgba(16, 163, 127, 0.1);
+    color: #10a37f;
+}
+
+/* Modo escuro para os cards (já que o site é dark theme) */
+@media (prefers-color-scheme: dark) {
+    .settings-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .settings-card h3 { color: #ffffff; }
+    .settings-desc { color: #a0aec0; }
+    .settings-input { 
+        background: rgba(0, 0, 0, 0.2); 
+        border-color: rgba(255, 255, 255, 0.1); 
+        color: white; 
+    }
+}
+
+
+
+/* --- MINHAS LIGAS --- */
+.leagues-container {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.leagues-header {
+    margin-bottom: 40px;
+}
+
+.leagues-header h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.leagues-header p {
+    color: #a0aec0;
+    font-size: 1rem;
+}
+
+/* Layout de duas colunas */
+.leagues-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.my-leagues-list {
+    flex: 2; /* Ocupa 2/3 do espaço */
+}
+
+.leagues-actions {
+    flex: 1; /* Ocupa 1/3 do espaço */
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Grid das Ligas do Usuário */
+.leagues-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Estado Vazio */
+.empty-state {
+    background: rgba(255, 255, 255, 0.02);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 12px;
+    grid-column: 1 / -1;
+}
+
+.empty-state h3 {
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #64748b;
+}
+
+/* Estilos dos Cards de Ação */
+.action-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.action-card h3 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.action-card.highlight {
+    border-color: rgba(0, 240, 255, 0.3);
+    background: linear-gradient(145deg, rgba(0, 240, 255, 0.05), rgba(0, 0, 0, 0));
+}
+
+.uppercase-input {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    max-width: 130px;
+}
+
+/* Responsividade para Celular */
+@media (max-width: 768px) {
+    .leagues-layout {
+        flex-direction: column-reverse; /* Traz as ações para cima no celular */
+    }
+    
+    .my-leagues-list, .leagues-actions {
+        width: 100%;
+    }
+}
+
+
+/* --- SALA DE PALPITES --- */
+.palpites-container {
+    max-width: 600px; /* Mantém estreito como um app de celular */
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.liga-header {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.liga-header h2 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.liga-header p {
+    color: #a0aec0;
+}
+
+/* Abas */
+.tabs-container {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    padding: 5px;
+    margin-bottom: 30px;
+    justify-content: space-between;
+}
+
+.tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    padding: 10px 15px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.tab-btn.active {
+    background: #ffffff;
+    color: #070b19;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Divisor de Datas */
+.data-divisor {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 30px 0 15px 10px;
+}
+
+/* Card do Jogo */
+.jogo-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.jogo-info-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.badge-fase {
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.hora-jogo {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+}
+
+.times-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.time-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-detalhe {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.flag-icon-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.time-nome {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Caixas de Input do Placar */
+.input-placar {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-placar:focus {
+    border-color: #00f0ff;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+/* Ocultar as setinhas chatas do input number */
+.input-placar::-webkit-inner-spin-button,
+.input-placar::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-salvar-palpite {
+    width: 100%;
+    margin-top: 20px;
+    background: rgba(0, 240, 255, 0.1);
+    color: #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-salvar-palpite:hover {
+    background: #00f0ff;
+    color: #070b19;
+}
+
+/* --- NAVEGAÇÃO DE RODADAS --- */
+.rodada-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.btn-rodada {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #00f0ff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-rodada:hover:not(:disabled) {
+    background: rgba(0, 240, 255, 0.1);
+    border-color: #00f0ff;
+}
+
+.btn-rodada:disabled {
+    color: #475569;
+    cursor: not-allowed;
+    border-color: transparent;
+}
+
+#label-rodada {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    min-width: 120px;
+    text-align: center;
+}
+
+/* Botão de Salvar em Lote */
+.save-all-btn {
+    margin-top: 30px;
+    margin-bottom: 50px;
+    font-size: 1.1rem;
+    padding: 15px;
+    background: #00f0ff;
+    color: #070b19;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+}
+
+.save-all-btn:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+
+
+/* --- PALPITES EXTRAS --- */
+.extra-label {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0; /* Alterado para 0 */
+}
+
+/* Adicione estas duas novas classes */
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.badge-pts {
+    background: rgba(16, 163, 127, 0.15);
+    color: #10a37f;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(16, 163, 127, 0.3);
+}
+
+.extra-select, .extra-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    appearance: none; /* Remove a setinha padrão feia do navegador */
+}
+
+/* Criando uma setinha customizada para o Select */
+.extra-select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: 96%;
+    background-position-y: center;
+}
+
+.extra-select:focus, .extra-input:focus {
+    border-color: #00f0ff;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.extra-select option {
+    background: #070b19;
+    color: #ffffff;
+}
+
+.ranking-lista {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ranking-pos { font-weight: 800; color: #00f0ff; width: 30px; }
+.ranking-nome { flex-grow: 1; color: white; margin-left: 15px; }
+.ranking-pts { font-weight: 700; color: #10a37f; }
+
+
+/* --- BOTÃO DE IR PARA O RANKING --- */
+.btn-ir-ranking {
+    margin-top: 15px;
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-ir-ranking:hover {
+    background: #ffd700;
+    color: #070b19;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+/* --- ESTILOS DE JOGO BLOQUEADO E ENCERRADO --- */
+.input-placar:disabled {
+    background: rgba(255, 255, 255, 0.05);
+    color: #475569;
+    border-color: transparent;
+    cursor: not-allowed;
+}
+
+.placar-oficial-badge {
+    text-align: center;
+    background: rgba(16, 163, 127, 0.15);
+    color: #10a37f;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 5px 0;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(16, 163, 127, 0.3);
+}
+
+.jogo-card.encerrado {
+    border-color: rgba(16, 163, 127, 0.3);
+    opacity: 0.8;
+}
+
+
+/* Estilo para os Radio Buttons do Mata-Mata */
+.radio-vencedor {
+    width: 22px;
+    height: 22px;
+    accent-color: #00f0ff; /* Cor da bolinha quando marcada */
+    cursor: pointer;
+}
+
+
+/* ========================================== */
+/* ALERTA DE HORÁRIO LIMITE                   */
+/* ========================================== */
+.alerta-limite {
+    background-color: rgba(255, 193, 7, 0.1); /* Fundo amarelado bem suave */
+    border-left: 4px solid #ffc107; /* Borda amarela de destaque na esquerda */
+    color: #e0e0e0;
+    padding: 12px 16px;
+    margin: 20px auto;
+    border-radius: 4px;
+    max-width: 600px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.alerta-limite .icone-alerta {
+    font-size: 1.4rem;
+}
+
+/* ========================================== */
+/* FOOTER DEVELOPED BY                        */
+/* ========================================== */
+.footer-creditos {
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Linha sutil separando o conteúdo */
+}
+
+.footer-creditos a {
+    color: #00f0ff; /* Azul neon do tema */
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.footer-creditos a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.6); /* Efeito de brilho ao passar o mouse */
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Usuário - Bolão 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="../img/taca.png" alt="Logo Taça" class="nav-logo">
+            <span>Bolão 2026</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="ligas.html">Minhas Ligas</a></li>
+            <li><a href="usuario.html" class="active">Área do Usuário</a></li>
+        </ul>
+    </nav>
+
+    <main class="settings-container">
+        <div class="settings-header">
+            <h2>Configurações da Conta</h2>
+            <p>Personalize seu perfil no bolão.</p>
+        </div>
+
+        <div class="settings-card">
+            <h3>Seu nome</h3>
+            <p class="settings-desc">Como você aparecerá nos rankings das ligas.</p>
+            <div class="input-group">
+                <input type="text" id="user-name" placeholder="Digite seu nome ou apelido" class="settings-input">
+                <button class="btn-save" id="btn-save-name">Salvar nome</button>
+            </div>
+        </div>
+        
+        <footer class="footer-creditos">
+            <p>Developed by <a href="https://www.linkedin.com/in/yvesesteves" target="_blank" rel="noopener noreferrer">Yves Esteves</a></p>
+        </footer>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="usuario.js"></script>
+</body>
+</html>

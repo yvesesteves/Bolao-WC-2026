@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking - Bolão 2026</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+            <div class="nav-brand">
+                <!-- 1. Imagem da taça adicionada novamente -->
+                <img src="../img/taca.png" alt="Logo Taça" class="nav-logo">
+                <span>Bolão 2026</span>
+            </div>
+            <ul class="nav-links">
+                <!-- 2. Adicionado um ID para arrumarmos o link via JavaScript -->
+                <li><a href="#" id="link-voltar-palpites">Palpites</a></li>
+                <li><a href="#" class="active">Ranking</a></li>
+            </ul>
+    </nav>
+
+    <main class="palpites-container">
+        <h2 style="color: white; text-align: center; margin-bottom: 30px;">Classificação Geral</h2>
+        
+        <div id="lista-ranking" class="ranking-lista">
+            <!-- Os itens serão injetados aqui pelo JS -->
+        </div>
+        
+    <footer class="footer-creditos">
+        <p>Developed by <a href="https://www.linkedin.com/in/yvesesteves" target="_blank" rel="noopener noreferrer">Yves Esteves</a></p>
+    </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="ranking.js"></script>
+</body>
+</html>
