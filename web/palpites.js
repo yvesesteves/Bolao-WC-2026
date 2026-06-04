@@ -42,7 +42,7 @@ async function inicializarPagina() {
     // A função carregarExtras foi modificada para retornar uma Promessa
     await carregarExtras(); 
     
-    // AQUI ESTAVA O PROBLEMA: A função foi chamada logo após carregar os extras!
+    // Trava Visual chamada logo ao carregar a página
     verificarTravaExtras(); 
 }
 
@@ -488,20 +488,14 @@ async function carregarExtras() {
     }
 }
 
+// Função oficial para salvar os extras no banco de dados (CADEADO DUPLO)
 window.salvarExtras = async function() {
-    // 🔒 CADEADO DUPLO: Bloqueia a ação se o prazo já passou
-    const dataLimite = new Date('2026-06-11T15:59:00-03:00'); // Lembre de colocar a data oficial aqui depois dos testes
+    // AQUI ESTÁ O BLOQUEIO DA FUNÇÃO! Data para testes colocada no passado
+    const dataLimite = new Date('2026-06-04T13:23:00-03:00'); 
     if (new Date() > dataLimite) {
         return alert("O prazo para os palpites extras já foi encerrado!");
     }
 
-    // Captura o que foi selecionado na tela
-    const campeao = document.getElementById('extra-campeao').value;
-    // ... o resto da função continua igualzinho ...
-
-    // Captura o que foi selecionado na tela
-    const campeao = document.getElementById('extra-campeao').value;
-    // ... o resto da função continua igualzinho ...
     const campeao = document.getElementById('extra-campeao').value;
     const vice = document.getElementById('extra-vice').value;
     const zebra = document.getElementById('extra-zebra').value;
@@ -535,47 +529,26 @@ window.salvarExtras = async function() {
     }
 }
 
-// Função oficial para salvar os extras no banco de dados
-window.salvarExtras = async function() {
-    // 🔒 CADEADO DUPLO: Bloqueia a ação se o prazo já passou
-    // (Mudei para a data do seu teste: 04/06/2026 às 13:23)
-    const dataLimite = new Date('2026-06-04T13:23:00-03:00'); 
-    if (new Date() > dataLimite) {
-        return alert("O prazo para os palpites extras já foi encerrado!");
-    }
+// 8.Travar Palpites Extras Visualmente (Data Limite)
+function verificarTravaExtras() {
+    // A mesma data limite para testes
+    const dataLimite = new Date('2026-06-04T13:23:00-03:00');
+    const agora = new Date();
 
-    // Captura o que foi selecionado na tela
-    const campeao = document.getElementById('extra-campeao').value;
-    const vice = document.getElementById('extra-vice').value;
-    const zebra = document.getElementById('extra-zebra').value;
-    const decepcao = document.getElementById('extra-decepcao').value;
-    const artilheiro = document.getElementById('extra-artilheiro').value;
-    const assistente = document.getElementById('extra-assistente').value;
-    const melhor_jogador = document.getElementById('extra-melhor').value;
+    if (agora > dataLimite) {
+        const camposExtras = document.querySelectorAll('.extra-input, .extra-select');
+        camposExtras.forEach(campo => {
+            campo.disabled = true;
+            campo.style.opacity = '0.6';
+            campo.style.cursor = 'not-allowed';
+        });
 
-    // Trava de segurança: obriga a preencher pelo menos um antes de clicar em salvar
-    if (!campeao && !vice && !zebra && !decepcao && !artilheiro && !assistente && !melhor_jogador) {
-        return alert("Preencha ao menos um palpite extra para salvar!");
-    }
-
-    // Faz o UPSERT (Cria se não existir, atualiza se já existir)
-    const { error } = await supabaseClient
-        .from('palpites_extras')
-        .upsert({
-            usuario_id: usuarioLogadoId,
-            campeao: campeao || null,
-            vice: vice || null,
-            zebra: zebra || null,
-            decepcao: decepcao || null,
-            artilheiro: artilheiro || null,
-            assistente: assistente || null,
-            melhor_jogador: melhor_jogador || null
-        }, { onConflict: 'usuario_id' }); 
-
-    if (error) {
-        console.error("Erro no Supabase:", error);
-        alert("Erro ao salvar os palpites extras. Tente novamente.");
-    } else {
-        alert("Palpites Extras salvos com sucesso! 🌟");
+        const btnSalvarExtras = document.getElementById('btn-salvar-extras'); 
+        if (btnSalvarExtras) {
+            btnSalvarExtras.disabled = true;
+            btnSalvarExtras.textContent = '🔒 Palpites Encerrados';
+            btnSalvarExtras.style.cursor = 'not-allowed';
+            btnSalvarExtras.style.opacity = '0.5';
+        }
     }
 }
