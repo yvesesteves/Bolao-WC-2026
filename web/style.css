@@ -1129,3 +1129,42 @@ body {
         padding: 20px;
     }
 }
+
+/* ========================================== */
+/* INFO PONTUAÇÃO MATA-MATA                   */
+/* ========================================== */
+.info-pontuacao-mata {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 16px;
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.info-pontuacao-mata h4 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.pts-badge.avanco {
+    background: rgba(0, 240, 255, 0.15);
+    color: #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+.dica-mata {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    color: #a0aec0;
+    text-align: center;
+}
+
+.dica-mata strong {
+    color: #00f0ff;
+}

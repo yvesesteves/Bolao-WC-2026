@@ -23,150 +23,141 @@
     </nav>
 
     <main class="palpites-container">
-        
-<!-- Cabeçalho da Liga -->
         <div class="liga-header">
             <h2 id="nome-liga-atual">Nome do Bolão</h2>
             <p>Palpitando como: <strong id="nome-jogador-atual" style="color: #00f0ff;">Jogador</strong></p>
-            
-            <!-- NOVO BOTÃO DE RANKING -->
             <button class="btn-ir-ranking" onclick="irParaRanking()">
                 🏆 Ver Ranking da Liga
             </button>
         </div>
 
-        <!-- Abas de Navegação -->
         <div class="tabs-container">
             <button class="tab-btn" id="btn-tab-extras">Palpites Extras</button>
             <button class="tab-btn active" id="btn-tab-grupos">Fase de grupos</button>
             <button class="tab-btn" id="btn-tab-mata">Mata-mata</button>
         </div>
 
-                <!-- ========================================== -->
-                <!-- CONTAINER 1: Palpites Extras (Oculto)      -->
-                <!-- ========================================== -->
         <div id="container-extras" style="display: none;">
-                    <h3 class="data-divisor">Previsões do Torneio</h3>
-                    
-                    <div class="jogo-card">
-                        <div class="jogo-info-top">
-                            <span class="badge-fase">Bônus</span>
-                            <span class="hora-jogo">Garante pontos no final da Copa</span>
+            <h3 class="data-divisor">Previsões do Torneio</h3>
+            
+            <div class="jogo-card">
+                <div class="jogo-info-top">
+                    <span class="badge-fase">Bônus</span>
+                    <span class="hora-jogo">Garante pontos no final da Copa</span>
+                </div>
+                
+                <div class="times-container">
+                    <div style="margin-bottom: 20px;">
+                        <div class="label-row">
+                            <label class="extra-label">Seleção Campeã</label>
+                            <span class="badge-pts">+10 pts</span>
                         </div>
-                        
-                        <div class="times-container">
-                            
-            <div style="margin-bottom: 20px;">
-                                    <div class="label-row">
-                                        <label class="extra-label">Seleção Campeã</label>
-                                        <span class="badge-pts">+20 pts</span>
-                                    </div>
-                                    <select class="extra-select" id="extra-campeao">
-                                        <option value="" disabled selected hidden>Selecione quem vai levantar a taça...</option>
-                                        <option value="Alemanha">Alemanha</option>
-                                        <option value="Argentina">Argentina</option>
-                                        <option value="Bélgica">Bélgica</option>
-                                        <option value="Brasil">Brasil</option>
-                                        <option value="Croácia">Croácia</option>
-                                        <option value="Espanha">Espanha</option>
-                                        <option value="França">França</option>
-                                        <option value="Holanda">Holanda</option>
-                                        <option value="Inglaterra">Inglaterra</option>
-                                        <option value="Portugal">Portugal</option>
-                                        <option value="Outra">Outra</option>
-                                    </select>
-                                </div>
+                        <select class="extra-select" id="extra-campeao">
+                            <option value="" disabled selected hidden>Selecione quem vai levantar a taça...</option>
+                            <option value="Alemanha">Alemanha</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Bélgica">Bélgica</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Croácia">Croácia</option>
+                            <option value="Espanha">Espanha</option>
+                            <option value="França">França</option>
+                            <option value="Holanda">Holanda</option>
+                            <option value="Inglaterra">Inglaterra</option>
+                            <option value="Portugal">Portugal</option>
+                            <option value="Outra">Outra</option>
+                        </select>
+                    </div>
 
-                                <div style="margin-bottom: 20px;">
-                                    <div class="label-row">
-                                        <label class="extra-label">Vice Campeã</label>
-                                        <span class="badge-pts">+20 pts</span>
-                                    </div>
-                                    <select class="extra-select" id="extra-vice">
-                                        <option value="" disabled selected hidden>Selecione a vice-campeã...</option>
-                                        <option value="Alemanha">Alemanha</option>
-                                        <option value="Argentina">Argentina</option>
-                                        <option value="Bélgica">Bélgica</option>
-                                        <option value="Brasil">Brasil</option>
-                                        <option value="Croácia">Croácia</option>
-                                        <option value="Espanha">Espanha</option>
-                                        <option value="França">França</option>
-                                        <option value="Holanda">Holanda</option>
-                                        <option value="Inglaterra">Inglaterra</option>
-                                        <option value="Portugal">Portugal</option>
-                                        <option value="Outra">Outra</option>
-                                    </select>
-                                </div>
+                    <div style="margin-bottom: 20px;">
+                        <div class="label-row">
+                            <label class="extra-label">Vice Campeã</label>
+                            <span class="badge-pts">+10 pts</span>
+                        </div>
+                        <select class="extra-select" id="extra-vice">
+                            <option value="" disabled selected hidden>Selecione a vice-campeã...</option>
+                            <option value="Alemanha">Alemanha</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Bélgica">Bélgica</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Croácia">Croácia</option>
+                            <option value="Espanha">Espanha</option>
+                            <option value="França">França</option>
+                            <option value="Holanda">Holanda</option>
+                            <option value="Inglaterra">Inglaterra</option>
+                            <option value="Portugal">Portugal</option>
+                            <option value="Outra">Outra</option>
+                        </select>
+                    </div>
 
-                                <div style="margin-bottom: 20px;">
-                                    <div class="label-row">
-                                        <label class="extra-label">Zebra</label>
-                                        <span class="badge-pts">+20 pts</span>
-                                    </div>
-                                    <select class="extra-select" id="extra-zebra">
-                                        <option value="" disabled selected hidden>Seleção que vai surpreender e irá mais longe no mata mata</option>
-                                        <option value="África do Sul">África do Sul</option>
-                                        <option value="Arábia Saudita">Arábia Saudita</option>
-                                        <option value="Argélia">Argélia</option>
-                                        <option value="Austrália">Austrália</option>
-                                        <option value="Áustria">Áustria</option>
-                                        <option value="Bósnia e Herzegovina">Bósnia e Herzegovina</option>
-                                        <option value="Cabo Verde">Cabo Verde</option>
-                                        <option value="Canadá">Canadá</option>
-                                        <option value="Catar">Catar</option>
-                                        <option value="Colômbia">Colômbia</option>
-                                        <option value="Coreia do Sul">Coreia do Sul</option>
-                                        <option value="Costa do Marfim">Costa do Marfim</option>
-                                        <option value="Curaçau">Curaçau</option>
-                                        <option value="Egito">Egito</option>
-                                        <option value="Equador">Equador</option>
-                                        <option value="Escócia">Escócia</option>
-                                        <option value="Estados Unidos">Estados Unidos</option>
-                                        <option value="Gana">Gana</option>
-                                        <option value="Haiti">Haiti</option>
-                                        <option value="Irã">Irã</option>
-                                        <option value="Iraque">Iraque</option>
-                                        <option value="Japão">Japão</option>
-                                        <option value="Jordânia">Jordânia</option>
-                                        <option value="Marrocos">Marrocos</option>
-                                        <option value="México">México</option>
-                                        <option value="Noruega">Noruega</option>
-                                        <option value="Nova Zelândia">Nova Zelândia</option>
-                                        <option value="Panamá">Panamá</option>
-                                        <option value="Paraguai">Paraguai</option>
-                                        <option value="RD Congo">RD Congo</option>
-                                        <option value="República Tcheca">República Tcheca</option>
-                                        <option value="Senegal">Senegal</option>
-                                        <option value="Suécia">Suécia</option>
-                                        <option value="Suíça">Suíça</option>
-                                        <option value="Tunísia">Tunísia</option>
-                                        <option value="Turquia">Turquia</option>
-                                        <option value="Uruguai">Uruguai</option>
-                                        <option value="Uzbequistão">Uzbequistão</option>
-                                    </select>
-                                </div>
+                    <div style="margin-bottom: 20px;">
+                        <div class="label-row">
+                            <label class="extra-label">Zebra</label>
+                            <span class="badge-pts">+10 pts</span>
+                        </div>
+                        <select class="extra-select" id="extra-zebra">
+                            <option value="" disabled selected hidden>Seleção que vai surpreender e irá mais longe no mata mata</option>
+                            <option value="África do Sul">África do Sul</option>
+                            <option value="Arábia Saudita">Arábia Saudita</option>
+                            <option value="Argélia">Argélia</option>
+                            <option value="Austrália">Austrália</option>
+                            <option value="Áustria">Áustria</option>
+                            <option value="Bósnia e Herzegovina">Bósnia e Herzegovina</option>
+                            <option value="Cabo Verde">Cabo Verde</option>
+                            <option value="Canadá">Canadá</option>
+                            <option value="Catar">Catar</option>
+                            <option value="Colômbia">Colômbia</option>
+                            <option value="Coreia do Sul">Coreia do Sul</option>
+                            <option value="Costa do Marfim">Costa do Marfim</option>
+                            <option value="Curaçau">Curaçau</option>
+                            <option value="Egito">Egito</option>
+                            <option value="Equador">Equador</option>
+                            <option value="Escócia">Escócia</option>
+                            <option value="Estados Unidos">Estados Unidos</option>
+                            <option value="Gana">Gana</option>
+                            <option value="Haiti">Haiti</option>
+                            <option value="Irã">Irã</option>
+                            <option value="Iraque">Iraque</option>
+                            <option value="Japão">Japão</option>
+                            <option value="Jordânia">Jordânia</option>
+                            <option value="Marrocos">Marrocos</option>
+                            <option value="México">México</option>
+                            <option value="Noruega">Noruega</option>
+                            <option value="Nova Zelândia">Nova Zelândia</option>
+                            <option value="Panamá">Panamá</option>
+                            <option value="Paraguai">Paraguai</option>
+                            <option value="RD Congo">RD Congo</option>
+                            <option value="República Tcheca">República Tcheca</option>
+                            <option value="Senegal">Senegal</option>
+                            <option value="Suécia">Suécia</option>
+                            <option value="Suíça">Suíça</option>
+                            <option value="Tunísia">Tunísia</option>
+                            <option value="Turquia">Turquia</option>
+                            <option value="Uruguai">Uruguai</option>
+                            <option value="Uzbequistão">Uzbequistão</option>
+                        </select>
+                    </div>
 
-                                <div style="margin-bottom: 20px;">
-                                    <div class="label-row">
-                                        <label class="extra-label">Decepção</label>
-                                        <span class="badge-pts">+20 pts</span>
-                                    </div>
-                                    <select class="extra-select" id="extra-decepcao">
-                                        <option value="" disabled selected hidden>Time forte, mas não vai virar nada e cairá cedo</option>
-                                        <option value="Alemanha">Alemanha</option>
-                                        <option value="Argentina">Argentina</option>
-                                        <option value="Brasil">Brasil</option>
-                                        <option value="Espanha">Espanha</option>
-                                        <option value="França">França</option>
-                                        <option value="Inglaterra">Inglaterra</option>
-                                        <option value="Portugal">Portugal</option>
-                                    </select>
-                                </div>
+                    <div style="margin-bottom: 20px;">
+                        <div class="label-row">
+                            <label class="extra-label">Decepção</label>
+                            <span class="badge-pts">+10 pts</span>
+                        </div>
+                        <select class="extra-select" id="extra-decepcao">
+                            <option value="" disabled selected hidden>Time forte, mas não vai virar nada e cairá cedo</option>
+                            <option value="Alemanha">Alemanha</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Espanha">Espanha</option>
+                            <option value="França">França</option>
+                            <option value="Inglaterra">Inglaterra</option>
+                            <option value="Portugal">Portugal</option>
+                        </select>
+                    </div>
 
-                            <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: 20px;">
                         <div class="label-row">
                             <label class="extra-label">Artilheiro</label>
-                            <span class="badge-pts">+20 pts</span>
+                            <span class="badge-pts">+10 pts</span>
                         </div>
                         <select class="extra-select" id="extra-artilheiro">
                             <option value="" disabled selected hidden>Qual jogador marcará mais gols no torneio?</option>
@@ -196,6 +187,7 @@
                             <option value="Bukayo Saka">Bukayo Saka (Inglaterra)</option>
                             <option value="Sorloth">Sorloth (Noruega)</option>
                             <option value="Vini Jr">Vini Jr (Brasil)</option>
+                            <option value="Vitinha">Vitinha (Portugal)</option>
                             <option value="Wirtz">Wirtz (Alemanha)</option>
                             <option value="Outro">Outro (Qualquer outro jogador)</option>
                         </select>
@@ -204,7 +196,7 @@
                     <div style="margin-bottom: 20px;">
                         <div class="label-row">
                             <label class="extra-label">Maior Assistente</label>
-                            <span class="badge-pts">+20 pts</span>
+                            <span class="badge-pts">+10 pts</span>
                         </div>
                         <select class="extra-select" id="extra-assistente">
                             <option value="" disabled selected hidden>Qual jogador vai dar mais passes para gol?</option>
@@ -248,7 +240,7 @@
                     <div style="margin-bottom: 20px;">
                         <div class="label-row">
                             <label class="extra-label">Melhor Jogador</label>
-                            <span class="badge-pts">+20 pts</span>
+                            <span class="badge-pts">+10 pts</span>
                         </div>
                         <select class="extra-select" id="extra-melhor">
                             <option value="" disabled selected hidden>Qual jogador será eleito pela FIFA o melhor da Copa?</option>
@@ -298,41 +290,53 @@
                         </select>
                     </div>
 
-                        </div>
-                        
-                        <button id="btn-salvar-extras" class="btn-salvar-palpite" onclick="salvarExtras()">SALVAR PALPITES EXTRAS</button>
-                    </div>
                 </div>
+                
+                <button id="btn-salvar-extras" class="btn-salvar-palpite" onclick="salvarExtras()">SALVAR PALPITES EXTRAS</button>
+            </div>
+        </div>
 
-<!-- ========================================== -->
-        <!-- CONTAINER 2: Fase de Grupos                -->
-        <!-- ========================================== -->
         <div id="container-grupos">
-            <!-- Navegação de Rodadas -->
             <div class="rodada-nav">
                 <button id="btn-prev" class="btn-rodada">&#10094;</button>
                 <h3 id="label-rodada">Rodada 1</h3>
                 <button id="btn-next" class="btn-rodada">&#10095;</button>
             </div>
 
-            <!-- Área onde os jogos vão aparecer dinamicamente -->
             <div id="lista-jogos" class="jogos-lista"></div>
         </div>
 
-
-        <!-- ========================================== -->
-        <!-- CONTAINER 3: Mata-Mata                     -->
-        <!-- ========================================== -->
         <div id="container-mata" style="display: none;">
             
-            <!-- Navegação de Fases do Mata-Mata -->
+            <div class="info-pontuacao-mata">
+                <h4>⚽ Como funciona a pontuação nesta fase?</h4>
+                <ul class="points-list">
+                    <li>
+                        <span class="pts-badge exact">+2 pts</span> 
+                        <span class="pts-text"><strong>Placar Exato:</strong> Acertou o resultado em cheio.</span>
+                    </li>
+                    <li>
+                        <span class="pts-badge outcome">+1 pt</span> 
+                        <span class="pts-text"><strong>Tendência:</strong> Acertou quem ganhou ou se deu empate, mas errou o placar.</span>
+                    </li>
+                    <li>
+                        <span class="pts-badge avanco">+2 pts</span> 
+                        <span class="pts-text"><strong>Classificação:</strong> Acertou a seleção que avança de fase (bolinha marcada).</span>
+                    </li>
+                    <li>
+                        <span class="pts-badge wrong">0 pts</span> 
+                        <span class="pts-text"><strong>Errou:</strong> Não acertou o placar, nem a tendência e nem quem avança.</span>
+                    </li>
+                </ul>
+                <p class="dica-mata">💡 No cenário perfeito (cravar o placar + cravar quem passa), você soma <strong>4 pontos</strong> em um único jogo!</p>
+            </div>
+
             <div class="rodada-nav">
                 <button id="btn-prev-mata" class="btn-rodada">&#10094;</button>
                 <h3 id="label-fase-mata">16 avos de final</h3>
                 <button id="btn-next-mata" class="btn-rodada">&#10095;</button>
             </div>
 
-            <!-- Lista de jogos do Mata-mata -->
             <div id="lista-jogos-mata" class="jogos-lista"></div>
             
             <button class="btn-salvar-palpite save-all-btn" id="btn-salvar-mata" style="display: none;" onclick="salvarMataMataEmLote()">
@@ -345,13 +349,12 @@
             <span class="icone-alerta">⏱️</span>
             <p><strong>Atenção:</strong> Os palpites para cada partida são bloqueados automaticamente no exato momento do apito inicial.</p>
         </div>
-        <!-- ========================================== -->
         
-    <footer class="footer-creditos">
-        <p>Developed by <a href="https://www.linkedin.com/in/yvesesteves" target="_blank" rel="noopener noreferrer">Yves Esteves</a></p>
-    </footer>
+        <footer class="footer-creditos">
+            <p>Developed by <a href="https://www.linkedin.com/in/yvesesteves" target="_blank" rel="noopener noreferrer">Yves Esteves</a></p>
+        </footer>
     </main>
-<!-- Scripts -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="palpites.js"></script>
 </body>

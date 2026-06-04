@@ -39,10 +39,7 @@ async function inicializarPagina() {
     carregarCabecalho();
     carregarJogos();
     
-    // A função carregarExtras foi modificada para retornar uma Promessa
     await carregarExtras(); 
-    
-    // Trava Visual chamada logo ao carregar a página
     verificarTravaExtras(); 
 }
 
@@ -67,14 +64,19 @@ function formatarHora(dataISO) {
 }
 
 // --- REDE DE SEGURANÇA DAS BANDEIRAS ---
-function obterCaminhoBandeira(nomeTime, caminhoBanco) {
+function obterCaminhoBandeira(nomeTime) {
     if (!nomeTime || nomeTime === "A definir") {
         return "./img/country/default.png"; 
     }
-    if (caminhoBanco) {
-        return caminhoBanco;
-    }
-    return `./img/country/${nomeTime}.png`;
+    
+    // Ignoramos a coluna do banco de dados e FORÇAMOS a formatação baseada no nome!
+    const nomeFormatado = nomeTime
+        .toLowerCase()
+        .normalize("NFD") // Separa as letras dos acentos
+        .replace(/[\u0300-\u036f]/g, "") // Remove os acentos
+        .replace(/\s+/g, "-"); // Troca espaços por hífen
+        
+    return `./img/country/${nomeFormatado}.png`;
 }
 
 // 3. Carrega os Dados
@@ -103,7 +105,7 @@ async function carregarJogos() {
     renderizarRodada();
 }
 
-// 4. Desenha a Tela (Com Travas de Segurança e Placares Oficiais)
+// 4. Desenha a Tela
 function renderizarRodada() {
     const divLista = document.getElementById('lista-jogos');
     divLista.innerHTML = ''; 
@@ -187,7 +189,7 @@ function renderizarRodada() {
     }
 }
 
-// Controles de Navegação
+// Controles de Navegação Fase de Grupos
 document.getElementById('btn-prev').addEventListener('click', () => {
     if (rodadaAtual > 1) { rodadaAtual--; renderizarRodada(); window.scrollTo(0, 0); }
 });
@@ -196,7 +198,7 @@ document.getElementById('btn-next').addEventListener('click', () => {
     if (rodadaAtual < 3) { rodadaAtual++; renderizarRodada(); window.scrollTo(0, 0); }
 });
 
-// 5. AÇÃO: Salvar em Lote (Bulk Upsert)
+// 5. AÇÃO: Salvar em Lote Grupos
 window.salvarRodadaEmLote = async function() {
     const jogosDaRodada = todosJogos.filter(j => j.rodada === rodadaAtual && (j.fase === 'GROUP_STAGE' || j.fase === 'Fase de Grupos'));
     const palpitesParaSalvar = [];
@@ -231,7 +233,6 @@ window.salvarRodadaEmLote = async function() {
     if (palpitesParaSalvar.length < jogosDisponiveis) {
         const faltam = jogosDisponiveis - palpitesParaSalvar.length;
         const confirmar = confirm(`Atenção: Você deixou ${faltam} jogo(s) em branco nesta rodada.\n\nTem certeza que deseja salvar e deixar esses jogos sem palpite?`);
-        
         if (!confirmar) return; 
     }
 
@@ -333,7 +334,6 @@ function renderizarMataMata() {
         const card = document.createElement('div');
         card.className = cardClasse;
         
-        // NOVO LAYOUT: Agora temos o Radio e o Input de número na mesma linha
         card.innerHTML = `
             <div class="jogo-info-top">
                 <span class="badge-fase">${formatarDataHeader(jogo.data_jogo)}</span>
@@ -367,6 +367,23 @@ function renderizarMataMata() {
     btnSalvarMata.textContent = `Salvar Palpites - ${faseSelecionada.label}`;
 }
 
+// OS CLIQUE DAS SETAS DE MATA MATA
+document.getElementById('btn-prev-mata').addEventListener('click', () => {
+    if (indiceFaseMata > 0) { 
+        indiceFaseMata--; 
+        renderizarMataMata(); 
+        window.scrollTo(0, 0); 
+    }
+});
+
+document.getElementById('btn-next-mata').addEventListener('click', () => {
+    if (indiceFaseMata < ordemFasesMata.length - 1) { 
+        indiceFaseMata++; 
+        renderizarMataMata(); 
+        window.scrollTo(0, 0); 
+    }
+});
+
 window.salvarMataMataEmLote = async function() {
     const faseSelecionada = ordemFasesMata[indiceFaseMata];
     let jogosDaFase = todosJogos.filter(j => {
@@ -384,12 +401,10 @@ window.salvarMataMataEmLote = async function() {
         if (agora < dataHoraJogo && jogo.time_a && jogo.time_b) {
             jogosDisponiveis++;
             
-            // Agora capturamos o radio E os placares
             const radioSelecionado = document.querySelector(`input[name="vencedor_${jogo.id}"]:checked`);
             const golsA = document.getElementById(`gols_a_${jogo.id}`).value;
             const golsB = document.getElementById(`gols_b_${jogo.id}`).value;
 
-            // Só permite salvar se o usuário preencheu o placar E escolheu quem avança
             if (radioSelecionado && golsA !== '' && golsB !== '') {
                 palpitesParaSalvar.push({
                     usuario_id: usuarioLogadoId,
@@ -481,9 +496,7 @@ async function carregarExtras() {
     }
 }
 
-// Função oficial para salvar os extras no banco de dados (CADEADO DUPLO)
 window.salvarExtras = async function() {
-    // AQUI ESTÁ O BLOQUEIO DA FUNÇÃO! Data para testes colocada no passado
     const dataLimite = new Date('2026-06-11T15:59:00-03:00'); 
     if (new Date() > dataLimite) {
         return alert("O prazo para os palpites extras já foi encerrado!");
@@ -522,9 +535,7 @@ window.salvarExtras = async function() {
     }
 }
 
-// 8.Travar Palpites Extras Visualmente (Data Limite)
 function verificarTravaExtras() {
-    // A mesma data limite para testes
     const dataLimite = new Date('2026-06-11T15:59:00-03:00');
     const agora = new Date();
 
