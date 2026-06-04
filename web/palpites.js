@@ -69,11 +69,11 @@ function obterCaminhoBandeira(nomeTime) {
         return "./img/country/default.png"; 
     }
     
-    // 1. Dicionário de exceções: "Nome no banco" : "Nome do seu arquivo"
+    // 1. Dicionário de exceções
     const nomesEspeciais = {
         "Bósnia e Herzegovina": "bosnia",
         "República Tcheca": "tchequia"
-        // Se mais alguma der erro no futuro, é só adicionar aqui!
+        
     };
 
     // 2. Se o time estiver no nosso dicionário, usa o nome simplificado
