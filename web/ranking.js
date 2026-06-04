@@ -23,50 +23,60 @@ async function carregarRanking() {
     const listaDiv = document.getElementById('lista-ranking');
     listaDiv.innerHTML = '<p style="color: white; text-align: center;">Calculando pontos...</p>';
 
-    // 2. Busca os pontos
-    const { data: palpites } = await supabaseClient.from('palpites').select('usuario_id, pontos_obtidos');
-    const { data: extras } = await supabaseClient.from('palpites_extras').select('usuario_id, pontos_obtidos');
+    // 1. PRIMEIRO PASSO: Descobrir QUEM são os participantes DESTA liga específica
+    const { data: participantes, error: erroPart } = await supabaseClient
+        .from('participantes')
+        .select('usuario_id')
+        .eq('liga_id', ligaIdAtual);
 
-    // 3. Busca os NOMES REAIS na tabela perfis
-    const { data: perfis } = await supabaseClient.from('perfis').select('id, nome');
+    if (erroPart || !participantes || participantes.length === 0) {
+        listaDiv.innerHTML = '<p style="color: white; text-align: center;">Nenhum participante encontrado nesta liga.</p>';
+        return;
+    }
 
-    // Cria um mapa para achar o nome facilmente a partir do ID
+    // Extrai apenas os IDs dos participantes em uma lista
+    const idsNaLiga = participantes.map(p => p.usuario_id);
+
+    // 2. Busca apenas os palpites e extras da galera QUE ESTÁ NA LIGA
+    const { data: palpites } = await supabaseClient.from('palpites').select('usuario_id, pontos_obtidos').in('usuario_id', idsNaLiga);
+    const { data: extras } = await supabaseClient.from('palpites_extras').select('usuario_id, pontos_obtidos').in('usuario_id', idsNaLiga);
+
+    // 3. Busca os nomes reais na tabela 'perfis' apenas dessa galera
+    const { data: perfis } = await supabaseClient.from('perfis').select('id, nome').in('id', idsNaLiga);
+
+    // Cria o mapa de nomes para acesso rápido
     const mapaNomes = {};
     if (perfis) {
         perfis.forEach(perfil => mapaNomes[perfil.id] = perfil.nome);
     }
 
     const pontuacoes = {};
+    
+    // 4. TRUQUE DE MESTRE: Inicializa todo mundo da liga com 0 pontos. 
+    // Assim, mesmo quem ainda não fez palpite, aparece listado no ranking!
+    idsNaLiga.forEach(id => {
+        pontuacoes[id] = 0;
+    });
 
-    // Soma pontos dos jogos
+    // 5. Soma os pontos dos jogos e dos palpites extras
     if (palpites) {
-        palpites.forEach(p => {
-            pontuacoes[p.usuario_id] = (pontuacoes[p.usuario_id] || 0) + (p.pontos_obtidos || 0);
-        });
+        palpites.forEach(p => pontuacoes[p.usuario_id] += (p.pontos_obtidos || 0));
     }
-
-    // Soma pontos dos extras
     if (extras) {
-        extras.forEach(e => {
-            pontuacoes[e.usuario_id] = (pontuacoes[e.usuario_id] || 0) + (e.pontos_obtidos || 0);
-        });
+        extras.forEach(e => pontuacoes[e.usuario_id] += (e.pontos_obtidos || 0));
     }
 
-    // Converte para lista e ordena do maior para o menor
+    // 6. Converte para lista e ordena do maior para o menor
     const listaRanking = Object.entries(pontuacoes).sort((a, b) => b[1] - a[1]);
 
     listaDiv.innerHTML = '';
 
-    if (listaRanking.length === 0) {
-        listaDiv.innerHTML = '<p style="color: white; text-align: center;">Nenhum palpite computado ainda.</p>';
-        return;
-    }
-
+    // 7. Desenha na tela
     listaRanking.forEach((item, index) => {
         const usuarioId = item[0];
         const pontos = item[1];
         
-        // Substitui aquele código feio pelo nome real (se não achar, coloca "Jogador")
+        // Agora o nomeReal vai achar o nome verdadeiro ou usar "Jogador" se o cara não tiver cadastrado ainda
         const nomeReal = mapaNomes[usuarioId] || "Jogador"; 
 
         const div = document.createElement('div');
