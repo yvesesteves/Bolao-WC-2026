@@ -38,7 +38,8 @@ async function inicializarPagina() {
 
     carregarCabecalho();
     carregarJogos();
-    carregarExtras();
+    await carregarExtras();
+    verificarTravaExtras();
 }
 
 async function carregarCabecalho() {
@@ -552,7 +553,7 @@ window.salvarExtras = async function() {
 // 8.Travar Palpites Extras (Data Limite)
 function verificarTravaExtras() {
     // Define a data limite: 11 de Junho de 2026 às 15:59 (Horário de Brasília)
-    const dataLimite = new Date('2026-06-04T13:23:00-03:00');
+    const dataLimite = new Date('2026-06-04T13:30:00-03:00');
     const agora = new Date();
 
     if (agora > dataLimite) {
