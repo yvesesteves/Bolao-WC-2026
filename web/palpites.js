@@ -491,7 +491,7 @@ async function carregarExtras() {
 // Função oficial para salvar os extras no banco de dados (CADEADO DUPLO)
 window.salvarExtras = async function() {
     // AQUI ESTÁ O BLOQUEIO DA FUNÇÃO! Data para testes colocada no passado
-    const dataLimite = new Date('2026-06-04T13:23:00-03:00'); 
+    const dataLimite = new Date('2026-06-11T15:59:00-03:00'); 
     if (new Date() > dataLimite) {
         return alert("O prazo para os palpites extras já foi encerrado!");
     }
@@ -532,7 +532,7 @@ window.salvarExtras = async function() {
 // 8.Travar Palpites Extras Visualmente (Data Limite)
 function verificarTravaExtras() {
     // A mesma data limite para testes
-    const dataLimite = new Date('2026-06-04T13:23:00-03:00');
+    const dataLimite = new Date('2026-06-11T15:59:00-03:00');
     const agora = new Date();
 
     if (agora > dataLimite) {
