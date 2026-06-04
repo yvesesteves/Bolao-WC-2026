@@ -16,10 +16,12 @@ async function inicializarRanking() {
     // Arruma o botão "Palpites" para levar o ID junto e não dar erro!
     document.getElementById('link-voltar-palpites').href = `palpites.html?id=${ligaIdAtual}`;
 
-    carregarRanking();
+    // Passa a variável como um "bastão" para a próxima função
+    carregarRanking(ligaIdAtual);
 }
 
-async function carregarRanking() {
+// A função agora "recebe" a variável ligaIdAtual dentro dos parênteses
+async function carregarRanking(ligaIdAtual) {
     const listaDiv = document.getElementById('lista-ranking');
     listaDiv.innerHTML = '<p style="color: white; text-align: center;">Calculando pontos...</p>';
 
@@ -52,8 +54,8 @@ async function carregarRanking() {
 
     const pontuacoes = {};
     
-    // 4. TRUQUE DE MESTRE: Inicializa todo mundo da liga com 0 pontos. 
-    // Assim, mesmo quem ainda não fez palpite, aparece listado no ranking!
+    // Inicializa todo mundo da liga com 0 pontos. 
+    // Assim, mesmo quem ainda não fez palpite, aparece listado no ranking
     idsNaLiga.forEach(id => {
         pontuacoes[id] = 0;
     });
