@@ -522,6 +522,11 @@ window.salvarExtras = async function() {
     const artilheiro = document.getElementById('extra-artilheiro').value;
     const assistente = document.getElementById('extra-assistente').value;
     const melhor_jogador = document.getElementById('extra-melhor').value;
+    const dataLimite = new Date('2026-06-04T13:40:00-03:00'); // DATA LIMITE: 11 de Junho de 2026 às 15:59 (Horário de Brasília)!!!
+    if (new Date() > dataLimite) {
+        return alert("O prazo para os palpites extras já foi encerrado!");
+    }
+    const campeao = document.getElementById('extra-campeao').value;
 
     // Trava de segurança: obriga a preencher pelo menos um antes de clicar em salvar
     if (!campeao && !vice && !zebra && !decepcao && !artilheiro && !assistente && !melhor_jogador) {
@@ -553,7 +558,7 @@ window.salvarExtras = async function() {
 // 8.Travar Palpites Extras (Data Limite)
 function verificarTravaExtras() {
     // Define a data limite: 11 de Junho de 2026 às 15:59 (Horário de Brasília)
-    const dataLimite = new Date('2026-06-04T13:30:00-03:00');
+    const dataLimite = new Date('2026-06-04T13:40:00-03:00'); // DATA AQUI!!
     const agora = new Date();
 
     if (agora > dataLimite) {
