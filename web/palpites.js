@@ -548,3 +548,29 @@ window.salvarExtras = async function() {
         alert("Palpites Extras salvos com sucesso! 🌟");
     }
 }
+
+// 8.Travar Palpites Extras (Data Limite)
+function verificarTravaExtras() {
+    // Define a data limite: 11 de Junho de 2026 às 15:59 (Horário de Brasília)
+    const dataLimite = new Date('2026-06-04T13:23:00-03:00');
+    const agora = new Date();
+
+    if (agora > dataLimite) {
+        // Seleciona todos os campos da aba de extras e trava
+        const camposExtras = document.querySelectorAll('.extra-input, .extra-select');
+        camposExtras.forEach(campo => {
+            campo.disabled = true;
+            campo.style.opacity = '0.6';
+            campo.style.cursor = 'not-allowed';
+        });
+
+        // Seleciona o botão de salvar os extras e desativa
+        const btnSalvarExtras = document.getElementById('btn-salvar-extras'); 
+        if (btnSalvarExtras) {
+            btnSalvarExtras.disabled = true;
+            btnSalvarExtras.textContent = '🔒 Palpites Encerrados';
+            btnSalvarExtras.style.cursor = 'not-allowed';
+            btnSalvarExtras.style.opacity = '0.5';
+        }
+    }
+}
