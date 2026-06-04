@@ -1084,3 +1084,48 @@ body {
     color: #ffffff;
     text-shadow: 0 0 8px rgba(0, 240, 255, 0.6); /* Efeito de brilho ao passar o mouse */
 }
+
+/* ========================================== */
+/*AJUSTES FINAIS PARA CELULAR  */
+@media (max-width: 768px) {
+    /* 1. Arrumando a Barra de Navegação */
+    .navbar {
+        flex-direction: column; /* Coloca a logo em cima e os links embaixo */
+        padding: 15px 10px;
+        gap: 15px;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+    
+    .nav-links a {
+        padding: 8px 12px;
+        font-size: 0.85rem; /* Diminui um pouco a fonte no celular */
+    }
+
+    /* 2. Arrumando os inputs e botões (Área do Usuário e Ligas) */
+    .input-group {
+        flex-direction: column; /* Coloca o botão embaixo do input */
+        gap: 10px;
+    }
+    
+    .settings-input {
+        width: 100%;
+    }
+
+    .btn-save {
+        width: 100%; /* Faz o botão ocupar a largura toda, padrão mobile */
+    }
+    
+    /* 3. Ajustes de espaçamento do Card de Configurações */
+    .settings-container {
+        margin: 30px auto;
+    }
+    
+    .settings-card {
+        padding: 20px;
+    }
+}
