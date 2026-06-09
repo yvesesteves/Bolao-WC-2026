@@ -11,7 +11,8 @@ Este projeto foi construído para automatizar a experiência clássica do bolão
 
 * **Autenticação de Usuários:** Login seguro e gerenciamento de sessões.
 * **Sistema de Ligas Privadas:** Criação de bolões com geração de código de convite (ex: `A1B2C3`), permitindo que os usuários entrem e saiam de ligas.
-* **Palpites Dinâmicos:** * **Fase de Grupos:** Palpites de placar exato com travas automáticas baseadas no horário de início da partida.
+* **Palpites Dinâmicos:**
+  * **Fase de Grupos:** Palpites de placar exato com travas automáticas baseadas no horário de início da partida.
   * **Mata-Mata:** Interface adaptada (Radio Buttons) para escolha de seleção classificada, ignorando o placar numérico para acomodar jogos decididos nos pênaltis.
   * **Palpites Extras (Bônus):** Previsões para Campeão, Vice, Zebra, Artilheiro, etc.
 * **Motor de Pontos Automatizado (Database Triggers):** Regras de pontuação calculadas instantaneamente no banco de dados assim que o status de um jogo muda.
