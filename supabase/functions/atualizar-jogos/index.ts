@@ -59,17 +59,29 @@ serve(async (req: Request) => {
             let vencedorOficial = null;
 
             if (jogoApi.status === 'FINISHED') {
-                status = 'encerrado';
-                golsA = jogoApi.score.fullTime.home;
-                golsB = jogoApi.score.fullTime.away;
+                const score = jogoApi.score;
+                
+                // Busca inteligente: tenta o fullTime, depois o regularTime (caso a API mude o formato)
+                const tempGolsA = score?.fullTime?.home ?? score?.regularTime?.home ?? null;
+                const tempGolsB = score?.fullTime?.away ?? score?.regularTime?.away ?? null;
 
-                // NOVA LÓGICA: Se o jogo acabou e não é fase de grupos, descobre quem passou!
-                if (jogoApi.stage !== 'GROUP_STAGE') {
-                    if (jogoApi.score.winner === 'HOME_TEAM') {
-                        vencedorOficial = timeA; // Usa o nome traduzido
-                    } else if (jogoApi.score.winner === 'AWAY_TEAM') {
-                        vencedorOficial = timeB; // Usa o nome traduzido
+                // A TRAVA DE SEGURANÇA: Só decreta o jogo como encerrado se os gols vieram de verdade!
+                if (tempGolsA !== null && tempGolsB !== null) {
+                    status = 'encerrado';
+                    golsA = tempGolsA;
+                    golsB = tempGolsB;
+
+                    // NOVA LÓGICA: Se o jogo acabou e não é fase de grupos, descobre quem passou!
+                    if (jogoApi.stage !== 'GROUP_STAGE') {
+                        if (score.winner === 'HOME_TEAM') {
+                            vencedorOficial = timeA;
+                        } else if (score.winner === 'AWAY_TEAM') {
+                            vencedorOficial = timeB;
+                        }
                     }
+                } else {
+                    // Se a API disse que acabou, mas não mandou os gols, continua 'aberto' para tentar depois
+                    status = 'aberto'; 
                 }
             }
 
