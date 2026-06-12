@@ -97,11 +97,11 @@ async function carregarMinhasLigas() {
     const grid = document.getElementById('leagues-grid');
     grid.innerHTML = '<p style="color: white; text-align: center;">Carregando seus bolões...</p>';
 
-    // Mágica do Supabase: Faz um SELECT na tabela participantes fazendo um JOIN automático na tabela ligas
+    // Mágica do Supabase: Busca as ligas que o usuário participa
     const { data: participacoes, error } = await supabaseClient
         .from('participantes')
         .select(`
-            pontuacao_total,
+            liga_id,
             ligas ( id, nome, codigo_convite )
         `)
         .eq('usuario_id', usuarioLogadoId);
@@ -112,7 +112,6 @@ async function carregarMinhasLigas() {
     }
 
     if (!participacoes || participacoes.length === 0) {
-        // Retorna o visual vazio padrão se não achar nada
         grid.innerHTML = `
             <div class="empty-state">
                 <h3>Você ainda não participa de nenhum bolão.</h3>
@@ -124,12 +123,55 @@ async function carregarMinhasLigas() {
 
     grid.innerHTML = ''; // Limpa o "Carregando" da tela
 
-// Desenha um card novo para cada liga encontrada
-    participacoes.forEach(p => {
+    // Usamos um for...of para podermos usar await e calcular o ranking de cada liga
+    for (const p of participacoes) {
         const liga = p.ligas;
+
+        // --- INÍCIO DA LÓGICA DE RANKING DINÂMICO CORRIGIDA ---
+        // 1. Pega todos os membros dessa liga
+        const { data: membros } = await supabaseClient
+            .from('participantes')
+            .select('usuario_id')
+            .eq('liga_id', liga.id);
+
+        const idsMembros = membros ? membros.map(m => m.usuario_id) : [];
+
+        // 2. Busca os palpites APENAS da galera que tá nessa liga (Usando .in no lugar de .eq)
+        const { data: palpitesLiga, error: erroPalpites } = await supabaseClient
+            .from('palpites')
+            .select('usuario_id, pontos_obtidos')
+            .in('usuario_id', idsMembros);
+
+        if (erroPalpites) console.error("Erro nos palpites:", erroPalpites);
+
+        // 3. Inicializa todos com zero e soma os pontos
+        const mapaPontos = {};
+        idsMembros.forEach(id => mapaPontos[id] = 0);
+        
+        if (palpitesLiga) {
+            palpitesLiga.forEach(palpite => {
+                if (mapaPontos[palpite.usuario_id] !== undefined) {
+                    mapaPontos[palpite.usuario_id] += (Number(palpite.pontos_obtidos) || 0);
+                }
+            });
+        }
+
+        // 4. Cria a lista do ranking e ordena do maior para o menor
+        const ranking = Object.keys(mapaPontos).map(id => ({
+            usuario_id: id,
+            total: mapaPontos[id]
+        })).sort((a, b) => b.total - a.total);
+
+        // 5. Descobre a posição e a pontuação do usuário logado
+        const indexUser = ranking.findIndex(r => r.usuario_id === usuarioLogadoId);
+        const minhaPontuacao = indexUser !== -1 ? ranking[indexUser].total : 0;
+        const minhaPosicao = indexUser !== -1 ? (indexUser + 1) + "º" : "-";
+        // --- FIM DA LÓGICA DE RANKING ---
+
         const card = document.createElement('div');
         card.className = 'action-card'; 
         
+        // Novo HTML do Card com Pontuação e Posição dividindo o espaço
         card.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                 <h3 style="margin: 0; font-size: 1.3rem;">${liga.nome}</h3>
@@ -138,9 +180,18 @@ async function carregarMinhasLigas() {
                 </span>
             </div>
             
-            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-                <span style="color: #a0aec0; font-size: 0.85rem; display: block; margin-bottom: 5px;">Sua Pontuação</span>
-                <div style="font-size: 2rem; font-weight: 800; color: #00f0ff; line-height: 1;">${p.pontuacao_total || 0} <span style="font-size: 1rem; color: #a0aec0; font-weight: normal;">pts</span></div>
+            <div style="display: flex; justify-content: space-around; align-items: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                <div style="text-align: center; width: 45%;">
+                    <span style="color: #a0aec0; font-size: 0.85rem; display: block; margin-bottom: 5px;">Sua Pontuação</span>
+                    <div style="font-size: 1.8rem; font-weight: 800; color: #00f0ff; line-height: 1;">${minhaPontuacao} <span style="font-size: 0.9rem; color: #a0aec0; font-weight: normal;">pts</span></div>
+                </div>
+                
+                <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.1);"></div>
+                
+                <div style="text-align: center; width: 45%;">
+                    <span style="color: #a0aec0; font-size: 0.85rem; display: block; margin-bottom: 5px;">Sua Colocação</span>
+                    <div style="font-size: 1.8rem; font-weight: 800; color: #fbbf24; line-height: 1;">${minhaPosicao} <span style="font-size: 0.9rem; color: #a0aec0; font-weight: normal;">lugar</span></div>
+                </div>
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -153,10 +204,10 @@ async function carregarMinhasLigas() {
             </div>
         `;
         grid.appendChild(card);
-    });
+    }
 }
 
-// Roda tudo!
+// Roda tudo
 inicializarPagina();
 
 // Função para copiar o código com feedback visual
