@@ -354,10 +354,12 @@ function renderizarMataMata() {
         }
 
         let htmlBotaoVigiar = '';
-        // O botão SÓ aparece se a partida iniciou (bloqueado) E não acabou
-        if (jogoBloqueado && !jogoEncerrado) {
+        
+        const jogoEmAndamentoReal = (agora >= dataHoraJogo) && !jogoEncerrado && jogo.time_a && jogo.time_b;
+        
+        if (jogoEmAndamentoReal) {
             htmlBotaoVigiar = `
-                <button class="btn-vigiar" onclick="abrirModalVigiar('${jogo.id}', '${jogo.time_a}', '${jogo.time_b}')">
+                <button class="btn-vigiar" onclick="abrirModalVigiar('${jogo.id}', '${timeA_nome}', '${timeB_nome}')">
                     👁️ Vigiar Palpites (Ao Vivo)
                 </button>
             `;
