@@ -353,6 +353,19 @@
         <footer class="footer-creditos">
             <p>Developed by <a href="https://www.linkedin.com/in/yvesesteves" target="_blank" rel="noopener noreferrer">Yves Esteves</a></p>
         </footer>
+
+        
+        <div id="modal-vigiar" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-vigiar-titulo">Palpites ao Vivo</h3>
+                    <button class="btn-fechar-modal" onclick="fecharModalVigiar()">&times;</button>
+                </div>
+                <div class="modal-body" id="lista-vigiar-palpites">
+                    </div>
+            </div>
+        </div>
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

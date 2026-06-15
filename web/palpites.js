@@ -163,6 +163,16 @@ function renderizarRodada() {
             `;
         }
 
+        let htmlBotaoVigiar = '';
+        // O botão SÓ aparece se a partida iniciou (bloqueado) E não acabou
+        if (jogoBloqueado && !jogoEncerrado) {
+            htmlBotaoVigiar = `
+                <button class="btn-vigiar" onclick="abrirModalVigiar('${jogo.id}', '${jogo.time_a}', '${jogo.time_b}')">
+                    👁️ Vigiar Palpites (Ao Vivo)
+                </button>
+            `;
+        }
+
         const card = document.createElement('div');
         card.className = cardClasse;
         card.innerHTML = `
@@ -185,7 +195,7 @@ function renderizarRodada() {
                     </div>
                     <input type="number" id="gols_b_${jogo.id}" class="input-placar" min="0" max="15" placeholder="-" value="${valB}" ${inputStatus}>
                 </div>
-            </div>
+            </div> ${htmlBotaoVigiar}
             ${htmlPlacarOficial}
         `;
         divLista.appendChild(card);
@@ -343,6 +353,16 @@ function renderizarMataMata() {
             `;
         }
 
+        let htmlBotaoVigiar = '';
+        // O botão SÓ aparece se a partida iniciou (bloqueado) E não acabou
+        if (jogoBloqueado && !jogoEncerrado) {
+            htmlBotaoVigiar = `
+                <button class="btn-vigiar" onclick="abrirModalVigiar('${jogo.id}', '${jogo.time_a}', '${jogo.time_b}')">
+                    👁️ Vigiar Palpites (Ao Vivo)
+                </button>
+            `;
+        }
+
         const card = document.createElement('div');
         card.className = cardClasse;
         
@@ -368,7 +388,7 @@ function renderizarMataMata() {
                     </div>
                     <input type="number" id="gols_b_${jogo.id}" class="input-placar" min="0" max="15" placeholder="-" value="${valB}" ${inputStatus}>
                 </div>
-            </div>
+            </div> ${htmlBotaoVigiar}
             ${htmlPlacarOficial}
         `;
         divMata.appendChild(card);
@@ -566,5 +586,99 @@ function verificarTravaExtras() {
             btnSalvarExtras.style.cursor = 'not-allowed';
             btnSalvarExtras.style.opacity = '0.5';
         }
+    }
+}
+
+// ==========================================
+// MÓDULO VIGIAR PALPITES (MODAL SECADA AO VIVO)
+// ==========================================
+window.abrirModalVigiar = async function(jogoId, timeA, timeB) {
+    const modal = document.getElementById('modal-vigiar');
+    const titulo = document.getElementById('modal-vigiar-titulo');
+    const lista = document.getElementById('lista-vigiar-palpites');
+
+    // 1. Abre o modal e mostra tela de loading
+    titulo.textContent = `${timeA} x ${timeB}`;
+    lista.innerHTML = '<p style="text-align: center; color: #a0aec0; margin: 20px 0;">Buscando os palpites da galera...</p>';
+    modal.style.display = 'flex';
+
+    try {
+        // 2. Lembra do problema do liga_id? Descobrimos quem tá na liga primeiro
+        const { data: membros } = await supabaseClient
+            .from('participantes')
+            .select('usuario_id')
+            .eq('liga_id', ligaIdAtual);
+            
+        const idsMembros = membros ? membros.map(m => m.usuario_id) : [];
+
+        // 3. Pega os palpites dessa galera APENAS para o jogo que está ao vivo
+        const { data: palpitesAoVivo } = await supabaseClient
+            .from('palpites')
+            .select('usuario_id, palpite_gols_a, palpite_gols_b, palpite_vencedor')
+            .eq('jogo_id', jogoId)
+            .in('usuario_id', idsMembros);
+
+        // 4. Pega os nomes da galera pra ficar legível
+        const { data: perfis } = await supabaseClient
+            .from('perfis')
+            .select('id, nome')
+            .in('id', idsMembros);
+
+        const mapaNomes = {};
+        if (perfis) perfis.forEach(p => mapaNomes[p.id] = p.nome);
+
+        // 5. Renderiza a lista na tela
+        if (!palpitesAoVivo || palpitesAoVivo.length === 0) {
+            lista.innerHTML = '<p style="text-align: center; color: #a0aec0; margin: 20px 0;">Nenhum palpite registrado.</p>';
+            return;
+        }
+
+        let htmlLista = '';
+        palpitesAoVivo.forEach(p => {
+            const nome = mapaNomes[p.usuario_id] || 'Sem Nome';
+            
+            // Lida tanto com placar numérico quanto com fase de grupos/mata-mata
+            let placarStr = '';
+            if (p.palpite_gols_a !== null && p.palpite_gols_b !== null) {
+                placarStr = `${p.palpite_gols_a} x ${p.palpite_gols_b}`;
+            } else {
+                placarStr = '-';
+            }
+
+            // Mostra também quem ele marcou como vencedor (se for mata-mata)
+            let avancoHmtl = '';
+            if (p.palpite_vencedor) {
+                avancoHmtl = `<span style="display: block; font-size: 0.7rem; color: #fbbf24; text-align: right; margin-top: 2px;">Avança: ${p.palpite_vencedor}</span>`;
+            }
+
+            htmlLista += `
+                <div class="palpite-item">
+                    <span style="font-weight: 600; color: white; font-size: 0.95rem;">${nome}</span>
+                    <div style="text-align: right;">
+                        <span style="color: #00f0ff; font-weight: 800; font-size: 1.1rem;">${placarStr}</span>
+                        ${avancoHmtl}
+                    </div>
+                </div>
+            `;
+        });
+
+        lista.innerHTML = htmlLista;
+
+    } catch (error) {
+        console.error("Erro na busca de palpites ao vivo:", error);
+        lista.innerHTML = '<p style="text-align: center; color: #ef4444;">Falha ao carregar os dados.</p>';
+    }
+}
+
+// Fechar Modal
+window.fecharModalVigiar = function() {
+    document.getElementById('modal-vigiar').style.display = 'none';
+}
+
+// Fechar ao clicar fora da caixinha (Área escura)
+window.onclick = function(event) {
+    const modal = document.getElementById('modal-vigiar');
+    if (event.target === modal) {
+        modal.style.display = 'none';
     }
 }
