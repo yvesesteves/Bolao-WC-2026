@@ -312,17 +312,30 @@ function renderizarMataMata() {
 
     const agora = new Date();
     let temJogoAbertoMata = false;
+    
+    // NOVA VARIÁVEL: Guarda a data para saber quando desenhar o separador
+    let dataAtualMata = ''; 
 
     jogosDaFase.forEach(jogo => {
         const nomeFaseBR = nomesFasesMataMata[jogo.fase] || jogo.fase;
         const horaFormatada = formatarHora(jogo.data_jogo);
+        const dataFormatada = formatarDataHeader(jogo.data_jogo); // Formatando a data
         const palpite = mapaPalpites[jogo.id];
 
-        if (faseSelecionada.id === 'FINAIS') {
-            const headerFase = document.createElement('h3');
-            headerFase.className = 'data-divisor';
-            headerFase.textContent = nomeFaseBR;
-            divMata.appendChild(headerFase);
+        // LÓGICA DO DIVISOR DE DATA (Igual à Fase de Grupos)
+        if (dataFormatada !== dataAtualMata) {
+            const headerData = document.createElement('h3');
+            headerData.className = 'data-divisor';
+            
+            // Se for as Finais, coloca o nome (Disputa de 3º ou Final) junto com a data
+            if (faseSelecionada.id === 'FINAIS') {
+                headerData.textContent = `${nomeFaseBR} - ${dataFormatada}`;
+            } else {
+                headerData.textContent = dataFormatada;
+            }
+            
+            divMata.appendChild(headerData);
+            dataAtualMata = dataFormatada; // Atualiza a variável para o próximo laço
         }
 
         const timeA_nome = jogo.time_a ? jogo.time_a : "A definir";
@@ -354,9 +367,8 @@ function renderizarMataMata() {
         }
 
         let htmlBotaoVigiar = '';
-        
+        // NOVA REGRA DO BOTÃO VIGIAR (Apenas se o jogo começou de fato)
         const jogoEmAndamentoReal = (agora >= dataHoraJogo) && !jogoEncerrado && jogo.time_a && jogo.time_b;
-        
         if (jogoEmAndamentoReal) {
             htmlBotaoVigiar = `
                 <button class="btn-vigiar" onclick="abrirModalVigiar('${jogo.id}', '${timeA_nome}', '${timeB_nome}')">
@@ -368,9 +380,10 @@ function renderizarMataMata() {
         const card = document.createElement('div');
         card.className = cardClasse;
         
+        // CORREÇÃO: O badge agora exibe o nome da fase em vez da data (que já está no título)
         card.innerHTML = `
             <div class="jogo-info-top">
-                <span class="badge-fase">${formatarDataHeader(jogo.data_jogo)}</span>
+                <span class="badge-fase">${faseSelecionada.id === 'FINAIS' ? 'Vale Medalha' : nomeFaseBR}</span>
                 <span class="hora-jogo">${jogoBloqueado && !jogoEncerrado && jogo.time_a ? 'Em andamento' : horaFormatada}</span>
             </div>
             <div class="times-container">
@@ -390,7 +403,8 @@ function renderizarMataMata() {
                     </div>
                     <input type="number" id="gols_b_${jogo.id}" class="input-placar" min="0" max="15" placeholder="-" value="${valB}" ${inputStatus}>
                 </div>
-            </div> ${htmlBotaoVigiar}
+            </div>
+            ${htmlBotaoVigiar}
             ${htmlPlacarOficial}
         `;
         divMata.appendChild(card);

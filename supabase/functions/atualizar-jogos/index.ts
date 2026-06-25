@@ -45,8 +45,12 @@ serve(async (req: Request) => {
         for (const jogoApi of dados.matches) {
             const apiMatchId = jogoApi.id;
             
-            // Trava de segurança: Pula o jogo se os times ainda não estiverem definidos (Mata-mata)
-            if (!jogoApi.homeTeam.name || !jogoApi.awayTeam.name) continue;
+            // Trava de segurança: Pula o jogo se os times não existirem, 
+            // usando "?." para evitar que o código dê crash se a API mandar "null"
+            if (!jogoApi.homeTeam?.name || !jogoApi.awayTeam?.name) continue;
+            
+            // Previne casos em que a API manda a string genérica "TBA"
+            if (jogoApi.homeTeam.name === 'TBA' || jogoApi.awayTeam.name === 'TBA') continue;
 
             // Traduz os nomes usando o nosso dicionário
             const timeA = dicionarioTimes[jogoApi.homeTeam.name] || jogoApi.homeTeam.name;
