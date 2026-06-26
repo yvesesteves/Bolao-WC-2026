@@ -443,16 +443,32 @@ window.salvarMataMataEmLote = async function() {
     let jogosDisponiveis = 0;
     const agora = new Date();
 
-    jogosDaFase.forEach(jogo => {
+    // Substituímos o forEach por for...of para podermos abortar a função inteira com 'return'
+    for (let jogo of jogosDaFase) {
         const dataHoraJogo = new Date(jogo.data_jogo);
         
+        // Verifica apenas os jogos que ainda não começaram e que já possuem os times definidos
         if (agora < dataHoraJogo && jogo.time_a && jogo.time_b) {
             jogosDisponiveis++;
             
             const radioSelecionado = document.querySelector(`input[name="vencedor_${jogo.id}"]:checked`);
-            const golsA = document.getElementById(`gols_a_${jogo.id}`).value;
-            const golsB = document.getElementById(`gols_b_${jogo.id}`).value;
+            // Usamos trim() para evitar que a pessoa dê apenas um "espaço" sem querer no input
+            const golsA = document.getElementById(`gols_a_${jogo.id}`).value.trim();
+            const golsB = document.getElementById(`gols_b_${jogo.id}`).value.trim();
 
+            // --- TRAVA DE SEGURANÇA 1: Placar preenchido, mas bolinha vazia ---
+            if ((golsA !== '' && golsB !== '') && !radioSelecionado) {
+                alert(`⚠️Você preencheu o placar, mas esqueceu de marcar a bolinha da seleção que avança no confronto:\n\n${jogo.time_a} x ${jogo.time_b}`);
+                return; // Aborta o salvamento
+            }
+
+            // --- TRAVA DE SEGURANÇA 2: Bolinha marcada, mas placar vazio ---
+            if ((golsA === '' || golsB === '') && radioSelecionado) {
+                alert(`⚠️Você marcou quem avança, mas esqueceu de preencher o placar completo no confronto:\n\n${jogo.time_a} x ${jogo.time_b}`);
+                return; // Aborta o salvamento na hora
+            }
+
+            // Se o palpite estiver 100% completo, prepara para salvar
             if (radioSelecionado && golsA !== '' && golsB !== '') {
                 palpitesParaSalvar.push({
                     usuario_id: usuarioLogadoId,
@@ -463,13 +479,13 @@ window.salvarMataMataEmLote = async function() {
                 });
             }
         }
-    });
+    }
 
     if (palpitesParaSalvar.length === 0) return alert("Preencha o placar e selecione quem avança em pelo menos um jogo!");
 
     if (palpitesParaSalvar.length < jogosDisponiveis) {
         const faltam = jogosDisponiveis - palpitesParaSalvar.length;
-        const confirmar = confirm(`Atenção: Faltam ${faltam} jogo(s) incompletos (preencha o placar e marque quem passa).\n\nTem certeza que deseja salvar assim mesmo?`);
+        const confirmar = confirm(`Atenção: Você tem ${faltam} jogo(s) totalmente em branco.\n\nTem certeza que deseja salvar assim mesmo e palpitar neles depois?`);
         if (!confirmar) return;
     }
 
