@@ -443,39 +443,53 @@ window.salvarMataMataEmLote = async function() {
     let jogosDisponiveis = 0;
     const agora = new Date();
 
-    // Substituímos o forEach por for...of para podermos abortar a função inteira com 'return'
     for (let jogo of jogosDaFase) {
         const dataHoraJogo = new Date(jogo.data_jogo);
         
-        // Verifica apenas os jogos que ainda não começaram e que já possuem os times definidos
         if (agora < dataHoraJogo && jogo.time_a && jogo.time_b) {
             jogosDisponiveis++;
             
             const radioSelecionado = document.querySelector(`input[name="vencedor_${jogo.id}"]:checked`);
-            // Usamos trim() para evitar que a pessoa dê apenas um "espaço" sem querer no input
             const golsA = document.getElementById(`gols_a_${jogo.id}`).value.trim();
             const golsB = document.getElementById(`gols_b_${jogo.id}`).value.trim();
 
             // --- TRAVA DE SEGURANÇA 1: Placar preenchido, mas bolinha vazia ---
             if ((golsA !== '' && golsB !== '') && !radioSelecionado) {
-                alert(`⚠️Você preencheu o placar, mas esqueceu de marcar a bolinha da seleção que avança no confronto:\n\n${jogo.time_a} x ${jogo.time_b}`);
-                return; // Aborta o salvamento
+                alert(`⚠️ Você preencheu o placar, mas esqueceu de marcar a bolinha da seleção que avança no confronto:\n\n${jogo.time_a} x ${jogo.time_b}`);
+                return; 
             }
 
             // --- TRAVA DE SEGURANÇA 2: Bolinha marcada, mas placar vazio ---
             if ((golsA === '' || golsB === '') && radioSelecionado) {
-                alert(`⚠️Você marcou quem avança, mas esqueceu de preencher o placar completo no confronto:\n\n${jogo.time_a} x ${jogo.time_b}`);
-                return; // Aborta o salvamento na hora
+                alert(`⚠️ Você marcou quem avança, mas esqueceu de preencher o placar completo no confronto:\n\n${jogo.time_a} x ${jogo.time_b}`);
+                return; 
             }
 
-            // Se o palpite estiver 100% completo, prepara para salvar
+            // --- TRAVA DE SEGURANÇA 3: Incoerência entre placar e bolinha ---
             if (radioSelecionado && golsA !== '' && golsB !== '') {
+                const golsA_int = parseInt(golsA);
+                const golsB_int = parseInt(golsB);
+                const timeAvanca = radioSelecionado.value;
+
+                // Se o Time A fez mais gols, mas o usuário selecionou o Time B para avançar
+                if (golsA_int > golsB_int && timeAvanca !== jogo.time_a) {
+                    alert(`❌ Palpite Inválido!\n\nVocê colocou que o(a) ${jogo.time_a} venceu o jogo no tempo normal por ${golsA_int}x${golsB_int}, então não é possível que o(a) ${jogo.time_b} avance de fase.\n\nCorrija o confronto: ${jogo.time_a} x ${jogo.time_b}`);
+                    return; 
+                }
+
+                // Se o Time B fez mais gols, mas o usuário selecionou o Time A para avançar
+                if (golsB_int > golsA_int && timeAvanca !== jogo.time_b) {
+                    alert(`❌ Palpite Inválido!\n\nVocê colocou que o(a) ${jogo.time_b} venceu o jogo no tempo normal por ${golsB_int}x${golsA_int}, então não é possível que o(a) ${jogo.time_a} avance de fase.\n\nCorrija o confronto: ${jogo.time_a} x ${jogo.time_b}`);
+                    return; 
+                }
+
+                // Se passou por todas as travas, o palpite está 100% válido e coerente!
                 palpitesParaSalvar.push({
                     usuario_id: usuarioLogadoId,
                     jogo_id: jogo.id,
-                    palpite_vencedor: radioSelecionado.value, 
-                    palpite_gols_a: parseInt(golsA), 
-                    palpite_gols_b: parseInt(golsB)
+                    palpite_vencedor: timeAvanca, 
+                    palpite_gols_a: golsA_int, 
+                    palpite_gols_b: golsB_int
                 });
             }
         }
