@@ -359,9 +359,13 @@ function renderizarMataMata() {
         let htmlPlacarOficial = '';
         if (jogoEncerrado) {
             const pts = palpite ? palpite.pontos_obtidos : 0;
+            
+            // Verifica se a API já preencheu quem passou para evitar mostrar "undefined"
+            const textoClassificado = jogo.vencedor_oficial ? ` | Classificado(a): ${jogo.vencedor_oficial}` : '';
+            
             htmlPlacarOficial = `
                 <div class="placar-oficial-badge">
-                    Resultado Oficial: ${jogo.gols_oficial_a} x ${jogo.gols_oficial_b} | Você ganhou: +${pts} pts
+                    Resultado Oficial: ${jogo.gols_oficial_a} x ${jogo.gols_oficial_b}${textoClassificado} | Você ganhou: +${pts} pts
                 </div>
             `;
         }
