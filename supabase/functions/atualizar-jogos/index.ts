@@ -65,9 +65,9 @@ serve(async (req: Request) => {
             if (jogoApi.status === 'FINISHED') {
                 const score = jogoApi.score;
                 
-                // Busca inteligente: tenta o fullTime, depois o regularTime (caso a API mude o formato)
-                const tempGolsA = score?.fullTime?.home ?? score?.regularTime?.home ?? null;
-                const tempGolsB = score?.fullTime?.away ?? score?.regularTime?.away ?? null;
+                // CORREÇÃO: Prioriza regularTime para ignorar gols de prorrogação/pênaltis no placar oficial
+                const tempGolsA = score?.regularTime?.home ?? score?.fullTime?.home ?? null;
+                const tempGolsB = score?.regularTime?.away ?? score?.fullTime?.away ?? null;
 
                 // A TRAVA DE SEGURANÇA: Só decreta o jogo como encerrado se os gols vieram de verdade!
                 if (tempGolsA !== null && tempGolsB !== null) {
