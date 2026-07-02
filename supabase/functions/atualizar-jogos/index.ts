@@ -45,8 +45,7 @@ serve(async (req: Request) => {
         for (const jogoApi of dados.matches) {
             const apiMatchId = jogoApi.id;
             
-            // Trava de segurança: Pula o jogo se os times não existirem, 
-            // usando "?." para evitar que o código dê crash se a API mandar "null"
+            // Trava de segurança: Pula o jogo se os times não existirem
             if (!jogoApi.homeTeam?.name || !jogoApi.awayTeam?.name) continue;
             
             // Previne casos em que a API manda a string genérica "TBA"
@@ -65,17 +64,29 @@ serve(async (req: Request) => {
             if (jogoApi.status === 'FINISHED') {
                 const score = jogoApi.score;
                 
-                // CORREÇÃO: Prioriza regularTime para ignorar gols de prorrogação/pênaltis no placar oficial
-                const tempGolsA = score?.regularTime?.home ?? score?.fullTime?.home ?? null;
-                const tempGolsB = score?.regularTime?.away ?? score?.fullTime?.away ?? null;
+                // Busca inicial (tenta pegar os 90 min, cai no fullTime se a API falhar)
+                let tempGolsA = score?.regularTime?.home ?? score?.fullTime?.home ?? null;
+                let tempGolsB = score?.regularTime?.away ?? score?.fullTime?.away ?? null;
 
-                // A TRAVA DE SEGURANÇA: Só decreta o jogo como encerrado se os gols vieram de verdade!
+                // --- O VAR MATEMÁTICO (Trava anti-prorrogação da API) ---
+                if (score?.duration === 'EXTRA_TIME' || score?.duration === 'PENALTY_SHOOTOUT') {
+                    // Se a API mandar um placar de vitória (ex: 3x2) num jogo de prorrogação,
+                    // a matemática garante que o empate original dos 90 min é o menor número (2).
+                    if (tempGolsA !== null && tempGolsB !== null && tempGolsA !== tempGolsB) {
+                        const golsEmpate = Math.min(tempGolsA, tempGolsB);
+                        tempGolsA = golsEmpate;
+                        tempGolsB = golsEmpate;
+                    }
+                }
+                // ---------------------------------------------------------
+
+                // Só decreta o jogo como encerrado se os gols vieram de verdade!
                 if (tempGolsA !== null && tempGolsB !== null) {
                     status = 'encerrado';
                     golsA = tempGolsA;
                     golsB = tempGolsB;
 
-                    // NOVA LÓGICA: Se o jogo acabou e não é fase de grupos, descobre quem passou!
+                    // NOVA LÓGICA: Descobre quem passou no mata-mata
                     if (jogoApi.stage !== 'GROUP_STAGE') {
                         if (score.winner === 'HOME_TEAM') {
                             vencedorOficial = timeA;
@@ -84,7 +95,6 @@ serve(async (req: Request) => {
                         }
                     }
                 } else {
-                    // Se a API disse que acabou, mas não mandou os gols, continua 'aberto' para tentar depois
                     status = 'aberto'; 
                 }
             }
